@@ -190,6 +190,16 @@ CHAINPOINT_NODE_PUBLIC_URI=
 
 `CHAINPOINT_NODE_PUBLIC_URI` : should be a URI where your Node can be publicly discovered and utilized by others. This might look like `http://10.1.1.20`. Your Node will run on port `80` over `http`. You can also provide a DNS domain name instead of an IPv4 address if you prefer. If provided, this address will be periodically audited by Tierion Core to ensure compliance with the rules for a healthy Node. If you leave this config value blank, it will be assumed that your Node is not publicly available, and you will not be eligible to earn TNT rewards.
 
+### Node Firewall
+
+You will need to expose port 80 (HTTP) to the world if you want your Node to be available for
+clients to connect to. This is true whether you run behind a non-public host behind a firewall
+or publicly. By default, most cloud compute server providers will block all access to your
+host's ports by default (usually with the exception of port 22 (SSH)). If your provider
+does not implement a block by default policy you are encouraged to choose another provider
+or to configure a firewall on your Node server to block access to all ports with the
+exception of port 80 HTTP and port 22 SSH.
+
 ### Node Authentication Key Backup/Restore
 
 Before you get started running a Node, you should understand how registration and authentication works. You are strongly encouraged to backup your authentication key(s).
