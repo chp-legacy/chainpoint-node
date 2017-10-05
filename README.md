@@ -126,6 +126,8 @@ use to identify your Node. You can check your TNT balance
 (in Grains, divide by `100000000` (10^8) for TNT balance) using the Etherscan.io
 [contract reading tool for our ERC20 smart contract](https://etherscan.io/address/0x08f5a9235b08173b7569f83645d2c7fb55e8ccd8#readContract) (input your address in the `balanceOf` field and click `Query`).
 
+If you run into any issues operating your Node, the first best place to look for help is the [Frequently Asked Questions](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions) page on our Wiki.
+
 ### Start a Server
 
 Your first step is to start a server and gain SSH access
