@@ -202,32 +202,6 @@ does not implement a block by default policy you are encouraged to choose anothe
 or to configure a firewall on your Node server to block access to all ports with the
 exception of port 80 HTTP and port 22 SSH.
 
-### Node Authentication Key Backup/Restore
-
-Before you get started running a Node, you should understand how registration and authentication works. You are strongly encouraged to backup your authentication key(s).
-
-Once your Node starts and registers itself a secret key will be provided for your system and stored in the Node's local database. The Node will use this key to authenticate itself to Tierion Core when
-submitting hashes and performing other actions. The database can hold multiple authentication keys
-and will choose the right one based on the Ethereum address you've configured in the `NODE_TNT_ADDRESS` environment variable in the `.env` file.
-
-If this secret key is lost, you will likely need to switch to another Ethereum address, and any credits on Tierion Core will be inaccessible. When you first start your Node this secret key is displayed in the logs. You will want to store it somewhere in case of accidental deletion.
-
-Its easy to export your keys at any time by issuing the command `make auth-keys`. This will
-select the keys from the database and print them out to the console. Just copy and paste them
-somewhere safe.
-
-You can also import an Ethereum address and secret key into your Node's database when restoring
-from backup using the following procedure.
-
-* Ensure that the `NODE_TNT_ADDRESS` environment variable in your `.env` file is set to the Ethereum address you want to set an auth key for.
-* Run `make auth-key-update KEY=mysecrethexkey` replacing `mysecrethexkey` with the specific hex auth key generated for the `NODE_TNT_ADDRESS` you set.
-
-You can verify that your keys were imported successfully by running `make auth-keys` again.
-
-When you run `make auth-key-update` your Node will be automatically restarted.
-
-On successful restart you should see log messages in `make logs` indicating use of your new auth key.
-
 ### Run Your Node
 
 Now its time to start your own Node!
@@ -278,6 +252,34 @@ chp submit --server http://127.0.0.1 <hash>
 
 You can stop your Node at any time with `make down`. You can
 verify that everything is stopped with `make ps`.
+
+### Node Authentication Key Backup/Restore
+
+You should understand how Node registration and authentication works. You are strongly encouraged to backup your authentication key(s). The following info may be useful if you need to backup/restore a Node
+and run it on another host.
+
+Once your Node starts and registers itself a secret key will be provided for your system and stored in the Node's local database. The Node will use this key to authenticate itself to Tierion Core when
+submitting hashes and performing other actions. The database can hold multiple authentication keys
+and will choose the right one based on the Ethereum address you've configured in the `NODE_TNT_ADDRESS` environment variable in the `.env` file.
+
+If this secret key is lost, you will likely need to switch to another Ethereum address, and any credits on Tierion Core will be inaccessible. When you first start your Node this secret key is displayed in the logs. You will want to store it somewhere in case of accidental deletion.
+
+Its easy to export your keys at any time by issuing the command `make auth-keys`. This will
+select the keys from the database and print them out to the console. Just copy and paste them
+somewhere safe.
+
+You can also import an Ethereum address and secret key into your Node's database when restoring
+from backup using the following procedure.
+
+* Ensure that the `NODE_TNT_ADDRESS` environment variable in your `.env` file is set to the Ethereum address you want to set an auth key for.
+* Run `make auth-key-update KEY=mysecrethexkey` replacing `mysecrethexkey` with the specific hex auth key generated for the `NODE_TNT_ADDRESS` you set.
+
+You can verify that your keys were imported successfully by running `make auth-keys` again.
+
+When you run `make auth-key-update` your Node will be automatically restarted.
+
+On successful restart you should see log messages in `make logs` indicating use of your new auth key.
+
 
 ## Thank You!
 
