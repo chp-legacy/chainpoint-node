@@ -113,3 +113,7 @@ guard-%:
 		echo "Environment variable $* not set"; \
 		exit 1; \
 	fi
+
+.PHONY : sign-chainpoint-security-txt
+sign-chainpoint-security-txt:
+	gpg --armor --output chainpoint-security.txt.sig --detach-sig chainpoint-security.txt
