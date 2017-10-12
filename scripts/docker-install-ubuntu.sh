@@ -31,6 +31,7 @@ sudo apt-get install -y docker-ce make
 
 echo '#################################################'
 echo 'Allow current user to use Docker without "sudo"'
+echo 'REQUIRES SSH session logout + login'
 echo '#################################################'
 sudo usermod -aG docker ${USER}
 
@@ -55,6 +56,6 @@ cd ~/chainpoint-node && make build-config
 
 echo '#################################################'
 echo 'Docker and docker-compose installation completed!'
-echo 'Please now edit the .env file in the directory'
-echo '~/chainpoint-node'
+echo 'Please now exit and restart this SSH session'
+echo 'before continuing with the README instructions.'
 echo '#################################################'
