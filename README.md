@@ -150,7 +150,7 @@ To make this process easier we have created a small script that will install Doc
 `chainpoint-node` repository to your system with a single command:
 
 ```
-curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/13b0c1b5028c14776bf4459518755b2625ddba34/scripts/docker-install-ubuntu.sh | bash
+curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/58a84a8822b8d79b1041c4fcf1d6e5d8e2fc431a/scripts/docker-install-ubuntu.sh | bash
 ```
 
 Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/docker-install-ubuntu.sh) before you run it.

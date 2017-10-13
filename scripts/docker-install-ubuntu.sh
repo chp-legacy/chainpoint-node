@@ -8,7 +8,7 @@ set -e
 # or by issuing this curl command. Since this command pipes the script
 # directly into a bash shell you should examine the script before running.
 #
-#   curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/13b0c1b5028c14776bf4459518755b2625ddba34/scripts/docker-install-ubuntu.sh | bash
+#   curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/58a84a8822b8d79b1041c4fcf1d6e5d8e2fc431a/scripts/docker-install-ubuntu.sh | bash
 #
 # Digital Ocean provides good documentation on how to manually install
 # Docker on their platform.
@@ -31,6 +31,7 @@ sudo apt-get install -y docker-ce make
 
 echo '#################################################'
 echo 'Allow current user to use Docker without "sudo"'
+echo 'REQUIRES SSH session logout + login'
 echo '#################################################'
 sudo usermod -aG docker ${USER}
 
@@ -55,6 +56,6 @@ cd ~/chainpoint-node && make build-config
 
 echo '#################################################'
 echo 'Docker and docker-compose installation completed!'
-echo 'Please now edit the .env file in the directory'
-echo '~/chainpoint-node'
+echo 'Please now exit and restart this SSH session'
+echo 'before continuing with the README instructions.'
 echo '#################################################'

@@ -32,9 +32,11 @@ services:
       - /usr/local/etc/redis/redis.conf
 
   chainpoint-node:
-    image: quay.io/chainpoint/chainpoint-node:1603d8116f53813a93105602c3150b4a714eb08e
+    image: quay.io/chainpoint/chainpoint-node:8e1bd2859d087c492543a9d996d8aecd10f761fb
     container_name: chainpoint-node
     restart: on-failure
+    volumes:
+      - ./ip-blacklist.txt:/home/node/app/ip-blacklist.txt:ro
     ports:
       - "80:8080"
     networks:
@@ -45,3 +47,4 @@ services:
     environment:
       NODE_TNT_ADDRESS: ${NODE_TNT_ADDRESS}
       CHAINPOINT_NODE_PUBLIC_URI: "${CHAINPOINT_NODE_PUBLIC_URI:-http://0.0.0.0}"
+      #DEBUG: "sequelize*"
