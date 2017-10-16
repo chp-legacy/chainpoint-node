@@ -32,7 +32,7 @@ services:
       - /usr/local/etc/redis/redis.conf
 
   chainpoint-node:
-    image: quay.io/chainpoint/chainpoint-node:b25d95d52f49b4434e0ba3df21023e09aa86571b
+    image: quay.io/chainpoint/chainpoint-node:d7e763b1751547fb6467c36a804a285ffc07e2ee
     container_name: chainpoint-node
     restart: on-failure
     volumes:
