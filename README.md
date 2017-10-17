@@ -210,6 +210,7 @@ After finishing the configuration in the `.env` file and saving it make sure you
 
 * `make up` : start all services
 * `make down` : stop all services
+* `make upgrade` : upgrade to newest release
 * `make logs` : show, and tail, the `docker-compose` logfiles
 * `make ps` : show the status of the running processes
 
