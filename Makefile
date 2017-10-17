@@ -18,12 +18,12 @@ help : Makefile
 
 ## up              : Start Node
 .PHONY : up
-up:
+up: ntpd-start
 	@docker-compose up -d
 
 ## down            : Shutdown Node
 .PHONY : down
-down:
+down: ntpd-stop
 	@docker-compose down
 
 ## restart         : Restart Node
@@ -34,6 +34,11 @@ restart: down up
 .PHONY : logs
 logs:
 	@docker-compose logs -f -t --tail=100 chainpoint-node | grep -v -E '(failed with exit code 99|node server\.js|yarnpkg\.com)'
+
+## logs-ntpd       : Tail ntpd logs
+.PHONY : logs-ntpd
+logs-ntpd:
+	@docker-compose -f docker-compose-ntpd.yaml logs -f -t --tail=100 chainpoint-ntpd
 
 ## logs-redis      : Tail Redis logs
 .PHONY : logs-redis
@@ -115,3 +120,25 @@ guard-%:
 .PHONY : sign-chainpoint-security-txt
 sign-chainpoint-security-txt:
 	gpg --armor --output chainpoint-security.txt.sig --detach-sig chainpoint-security.txt
+
+## ntpd-start      : Start docker ntpd
+.PHONY : ntpd-start
+ntpd-start:
+	@status=$$(ps -ef | grep -v -E '(grep|ntpd-start)' | grep ntpd | wc -l); \
+	if test $${status} -ge 1; then \
+		echo "Local NTPD is seems to be running. Skipping chainpoint-ntpd..."; \
+	else \
+		echo Local NTPD is not running. Starting chainpoint-ntpd...; \
+		docker-compose -f docker-compose-ntpd.yaml up -d; \
+	fi
+
+## ntpd-stop       : Stop docker ntpd
+.PHONY : ntpd-stop
+ntpd-stop:
+	-@docker-compose -f docker-compose-ntpd.yaml down;
+
+## ntpd-status     : Show docker ntpd status
+.PHONY : ntpd-status
+ntpd-status:
+	@echo ''
+	@docker exec -it chainpoint-ntpd ntpctl -s all
