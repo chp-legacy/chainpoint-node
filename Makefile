@@ -126,7 +126,7 @@ sign-chainpoint-security-txt:
 ntpd-start:
 	@status=$$(ps -ef | grep -v -E '(grep|ntpd-start)' | grep ntpd | wc -l); \
 	if test $${status} -ge 1; then \
-		echo "Local NTPD is seems to be running. Skipping chainpoint-ntpd..."; \
+		echo "Local NTPD seems to be running. Skipping chainpoint-ntpd..."; \
 	else \
 		echo Local NTPD is not running. Starting chainpoint-ntpd...; \
 		docker-compose -f docker-compose-ntpd.yaml up -d; \
