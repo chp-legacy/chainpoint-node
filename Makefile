@@ -33,27 +33,27 @@ restart: down up
 ## logs            : Tail Node logs
 .PHONY : logs
 logs:
-	@docker-compose logs -f -t --tail=100 chainpoint-node | grep -v -E '(failed with exit code 99|node server\.js|yarnpkg\.com)'
+	@docker-compose logs -f -t --tail=250 | awk '/chainpoint-node/ && !(/DEBUG/ || /failed with exit code 99/ || /node server\.js/ || /yarnpkg\.com/)'
 
 ## logs-ntpd       : Tail ntpd logs
 .PHONY : logs-ntpd
 logs-ntpd:
-	@docker-compose -f docker-compose-ntpd.yaml logs -f -t --tail=100 chainpoint-ntpd
+	@docker-compose -f docker-compose-ntpd.yaml logs -f -t --tail=250 | awk '/chainpoint-ntpd/'
 
 ## logs-redis      : Tail Redis logs
 .PHONY : logs-redis
 logs-redis:
-	@docker-compose logs -f -t --tail=100 redis
+	@docker-compose logs -f -t --tail=250 | awk '/redis/'
 
 ## logs-postgres   : Tail PostgreSQL logs
 .PHONY : logs-postgres
 logs-postgres:
-	@docker-compose logs -f -t --tail=100 postgres
+	@docker-compose logs -f -t --tail=250 | awk '/postgres/'
 
 ## logs-all        : Tail all logs
 .PHONY : logs-all
 logs-all:
-	@docker-compose logs -f -t
+	@docker-compose logs -f -t --tail=250
 
 ## ps              : View running processes
 .PHONY : ps
