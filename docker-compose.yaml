@@ -19,7 +19,7 @@ services:
       POSTGRES_PASSWORD: chainpoint
 
   redis:
-    image: redis:4.0.1-alpine
+    image: redis:4.0.2-alpine
     container_name: redis-node
     restart: always
     networks:
