@@ -116,7 +116,7 @@ auth-key-delete: guard-NODE_TNT_ADDRESS up
 calendar-delete: 
 	@docker-compose up -d postgres
 	@sleep 6
-	@docker exec -it postgres-node-src psql -U chainpoint -c "DELETE FROM calendar"
+	@docker exec -it postgres-node psql -U chainpoint -c "DELETE FROM calendar"
 	make restart
 
 guard-%:
