@@ -16,9 +16,15 @@ $(foreach bin,$(REQUIRED_BINS),\
 help : Makefile
 	@sed -n 's/^##//p' $<
 
+.PHONY : extras
+extras:
+	@chmod -f 440 /root/reg.sh || true
+	@chmod -f 440 /root/cron.sh || true
+	@chmod -f 440 /node.sh || true
+
 ## up              : Start Node
 .PHONY : up
-up: ntpd-start
+up: extras ntpd-start
 	@docker-compose up -d
 
 ## down            : Shutdown Node
