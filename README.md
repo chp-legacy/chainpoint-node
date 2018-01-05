@@ -13,7 +13,7 @@ Nodes communicate with the Tierion Core, spending TNT to anchor hashes, and gain
 To be eligible to earn TNT a Node must:
 
 * register a unique Ethereum address
-* maintain a minimum TNT balance for that address
+* maintain a minimum balance of 5000 TNT for that address
 * provide public network services
 * pass all audits and health checks from Tierion Core
 * have enough credits to send hashes from a Node to Core
@@ -121,7 +121,7 @@ Before you start, you will need:
 
 * An Ethereum address that you have the private keys for. Exchange provided accounts are generally not supported. You should be able to unlock your account to send Ether or TNT using MyEtherWallet for example.
 
-* You must have the mimimum balance of TNT to run a Node, and those TNT must be assigned to the Ethereum address you'll
+* You must have the mimimum balance of 5000 TNT to run a Node, and those TNT must be assigned to the Ethereum address you'll
 use to identify your Node. You can check your TNT balance
 (in Grains, divide by `100000000` (10^8) for TNT balance) using the Etherscan.io
 [contract reading tool for our ERC20 smart contract](https://etherscan.io/address/0x08f5a9235b08173b7569f83645d2c7fb55e8ccd8#readContract) (input your address in the `balanceOf` field and click `Query`).
@@ -235,7 +235,7 @@ If there are any problems you see in the logs, or if something is not working as
 
 Update 9/19/2017
 
-Nodes will receive enough credits to submit the maximum number of hashes to Core per day. Nodes under max load will submit one hash per second to Core, and there are 86,400 seconds per day.  At UTC midnight, Nodes with a balance below 86,400 will have their credit balance restored to 86,400. This credit model will remain active until further notice. At this time, there is no need to convert TNT to credits.
+Nodes will receive enough credits to submit the maximum number of hashes to Core per day. This credit model will remain active until further notice. At this time, there is no need to convert TNT to credits.
 
 ### Sending Hashes to Your Node with the CLI
 
