@@ -72,16 +72,34 @@ the Docker and Docker Compose container management tools and meets the minimal h
 
 #### Hardware
 
-The minimum hardware requirements for running a Node are
-relatively low. The following would be suitable minimums
-for a Node:
+The optimal hardware requirements for running a Node are relatively low.
+
+Pro (High Volume):
+
+- `>= 8GB RAM`
+- `4 CPU Core`
+- `>= 2GB swapfile`
+- `64GB SSD`
+- `Public IPv4 address`
+
+Recommended (Avoids most RAM issues):
 
 - `>= 2GB RAM`
 - `2 CPU Core`
+- `>= 2GB swapfile`
 - `20GB Hard Disk or SSD`
 - `Public IPv4 address`
 
-Running a Node on a server with 1GB of RAM or less has been [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node).
+Bare Minimum (May encounter RAM issues, depending on host setup):
+
+- `1GB RAM`
+- `1 CPU Core`
+- `>= 2GB swapfile`
+- `10GB Hard Disk or SSD`
+- `Public IPv4 address`
+
+
+Running a Node on a server with 1GB of RAM has been [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node). 
 
 If you are expecting larger volumes of hashes to be sent to your server its recommended that you scale-up the system resources by adding more RAM and CPU cores. Alternatively, you can scale-out horizontally by running more Nodes. The disk storage and CPU needs of a Node are relatively small, RAM is the first suggested upgrade.
 
