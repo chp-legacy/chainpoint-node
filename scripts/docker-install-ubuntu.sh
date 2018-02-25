@@ -8,7 +8,7 @@ set -e
 # or by issuing this curl command. Since this command pipes the script
 # directly into a bash shell you should examine the script before running.
 #
-#   curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/58a84a8822b8d79b1041c4fcf1d6e5d8e2fc431a/scripts/docker-install-ubuntu.sh | bash
+#   curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/7746017a7fd6389cf58ed2f6cff82eb473d16c6b/scripts/docker-install-ubuntu.sh | bash
 #
 # Digital Ocean provides good documentation on how to manually install
 # Docker on their platform.

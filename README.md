@@ -143,23 +143,25 @@ There are also [official docs for installing Docker](https://docs.docker.com/eng
 
 For some systems you will need to separately install `docker-compose`.
 
-To make this process easier we have created a small script that will install Docker, `docker-compose`, and download this
-`chainpoint-node` repository to your system with a single command:
+To make this process easier we have created a small script, designed to be run on Ubuntu 16.04 systems, that will install all runtime dependencies with a simple one-line command:
 
 ```
-curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/58a84a8822b8d79b1041c4fcf1d6e5d8e2fc431a/scripts/docker-install-ubuntu.sh | bash
+curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/7746017a7fd6389cf58ed2f6cff82eb473d16c6b/scripts/docker-install-ubuntu.sh | bash
 ```
 
 Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/docker-install-ubuntu.sh) before you run it.
 
-Simply copy/paste that script into your terminal and it will:
+Simply copy/paste the command into your terminal, logged in as the root user, or another that has sudo privileges, and it will:
 
-* install Docker
-* install Docker Compose
-* grant the ability for your local user to run Docker commands without using `sudo`
-* download this repository to your home folder.
+* Install Docker
+* Install Docker Compose
+* Configure a 2GB swap file that will survive reboots
+* Adjust system config related to swap performance
+* Grant the ability for your local user to run Docker commands without using `sudo`
+* Download this repository to your home folder
+* Create a default `.env` environment file, ready for you to edit
 
-**Important**: You should close your terminal SSH session and login again now to make sure that the changes in the script are fully applied.
+**Important**: You should close your terminal SSH session and login again after running it to make sure that the changes in the script are fully applied.
 
 ### Configure Your Node
 
