@@ -55,6 +55,16 @@ echo '#################################################'
 cd ~/chainpoint-node && make build-config
 
 echo '#################################################'
+echo 'Creating 2G swap file and enabling swap space'
+echo '#################################################'
+
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+echo '#################################################'
 echo 'Docker and docker-compose installation completed!'
 echo 'Please now exit and restart this SSH session'
 echo 'before continuing with the README instructions.'
