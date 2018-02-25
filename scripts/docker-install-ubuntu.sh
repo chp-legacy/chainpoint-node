@@ -20,6 +20,12 @@ set -e
 # - Non-root user with sudo privileges
 #
 
+# Don't run this script more than once!
+if [ -f /.chainpoint-installer-run ]; then
+    echo "Looks like this script has already been run. Exiting!"
+    exit 0
+fi
+
 echo '#################################################'
 echo 'Installing Docker'
 echo '#################################################'
@@ -55,17 +61,28 @@ echo '#################################################'
 cd ~/chainpoint-node && make build-config
 
 echo '#################################################'
-echo 'Creating 2G swap file and enabling swap space'
+echo 'Creating swap file as needed'
 echo '#################################################'
 
-sudo fallocate -l 2G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+if free | awk '/^Swap:/ {exit !$2}'; then
+    echo "An existing swap file was detected. Skipping..."
+else
+    echo "No swap file detected. Installing..."
+    sudo fallocate -l 2G /swapfile
+    sudo chmod 600 /swapfile
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+    sudo sysctl vm.swappiness=10
+    echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+    sudo sysctl vm.vfs_cache_pressure=50
+    echo 'vm.vfs_cache_pressure=50' | sudo tee -a /etc/sysctl.conf
+fi
 
 echo '#################################################'
 echo 'Docker and docker-compose installation completed!'
 echo 'Please now exit and restart this SSH session'
 echo 'before continuing with the README instructions.'
 echo '#################################################'
+
+sudo touch /.chainpoint-installer-run
