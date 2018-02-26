@@ -230,7 +230,8 @@ After finishing the configuration in the `.env` file and saving it make sure you
 
 * `make up` : start all services
 * `make down` : stop all services
-* `make upgrade` : upgrade to newest release
+* `make upgrade` : upgrade to newest release in git, restarting *all* services
+* `make restart` : restart only the Node software. DB services and git unaffected.
 * `make logs` : show, and tail, the `docker-compose` logfiles
 * `make ps` : show the status of the running processes
 
