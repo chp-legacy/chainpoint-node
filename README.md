@@ -12,11 +12,10 @@ Nodes communicate with the Tierion Core, spending TNT to anchor hashes, and gain
 
 To be eligible to earn TNT a Node must:
 
-* register a unique Ethereum address
+* register with a unique Ethereum address
 * maintain a minimum balance of 5000 TNT for that address
 * provide public network services
 * pass all audits and health checks from Tierion Core
-* have enough credits to send hashes from a Node to Core
 
 Chainpoint Nodes that don't meet these requirements won't be eligible to earn TNT through periodic rewards.
 
@@ -55,6 +54,7 @@ When started, `docker-compose` will install and run three system components in t
 * PostgreSQL Database
 * Redis
 * Chainpoint Node (Node.js)
+* NTP server (if not already running)
 
 They are started as a group and should not interfere with any other
 software systems running on your server.
@@ -62,9 +62,8 @@ software systems running on your server.
 Each Node instance you want to run will need:
 
 * A dedicated Ethereum address
-* Public IP/hostname
+* Public IP address
 * Minimum TNT balance
-* Access to credits, purchased with TNT
 
 ### System Requirements
 
@@ -73,31 +72,47 @@ the Docker and Docker Compose container management tools and meets the minimal h
 
 #### Hardware
 
-The minimum hardware requirements for running a Node are
-relatively low. The following would be suitable minimums
-for a Node expecting relatively light traffic:
+The optimal hardware requirements for running a Node are relatively low.
 
-- `>= 1GB RAM`
-- `1 CPU Core`
+Pro (High Volume):
+
+- `>= 8GB RAM`
+- `4 CPU Core`
+- `>= 2GB swapfile`
+- `64GB SSD`
+- `Public IPv4 address`
+
+Recommended (Avoids most RAM issues):
+
+- `>= 2GB RAM`
+- `2 CPU Core`
+- `>= 2GB swapfile`
 - `20GB Hard Disk or SSD`
 - `Public IPv4 address`
 
-Running a Node on a server with less than 1GB of RAM has been [known to cause issues](https://github.com/chainpoint/chainpoint-node-src).
+Bare Minimum (May encounter RAM issues, depending on host setup):
 
-If you are expecting larger volumes of hashes to be sent to your server its recommended that you scale-up the system resources by adding more RAM and CPU cores. Alternatively, you can scale-out horizontally by running more Nodes. The disk storage needs of a Node are relatively small.
+- `1GB RAM`
+- `1 CPU Core`
+- `>= 2GB swapfile`
+- `10GB Hard Disk or SSD`
+- `Public IPv4 address`
 
-It is not currently supported to run multiple Nodes on a single
-physical host.
+
+Running a Node on a server with 1GB of RAM has been [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node). 
+
+If you are expecting larger volumes of hashes to be sent to your server its recommended that you scale-up the system resources by adding more RAM and CPU cores. Alternatively, you can scale-out horizontally by running more Nodes. The disk storage and CPU needs of a Node are relatively small, RAM is the first suggested upgrade.
+
+It is not supported to run multiple instances of the Node software on a single physical host.
 
 #### Operating System
 
-The software has been tested on the following operating systems:
+The software has been tested and is supported on the following operating systems:
 
 * `Ubuntu 16.04 LTS`
-* `macOS Version 10.12.6`
+* `macOS Version 10.12.6+`
 
-It will likely run on other operating systems that support Docker
-and Docker Compose, but support is not currently provided for those.
+It will likely run on other operating systems that support Docker and Docker Compose, but support is not currently provided for those.
 
 #### Docker & Docker Compose
 
@@ -146,23 +161,25 @@ There are also [official docs for installing Docker](https://docs.docker.com/eng
 
 For some systems you will need to separately install `docker-compose`.
 
-To make this process easier we have created a small script that will install Docker, `docker-compose`, and download this
-`chainpoint-node` repository to your system with a single command:
+To make this process easier we have created a small script, designed to be run on Ubuntu 16.04 systems, that will install all runtime dependencies with a simple one-line command:
 
 ```
-curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/58a84a8822b8d79b1041c4fcf1d6e5d8e2fc431a/scripts/docker-install-ubuntu.sh | bash
+curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/c1f65f79a831caae2ccadac2568620867dd80e1a/scripts/docker-install-ubuntu.sh | bash
 ```
 
 Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/docker-install-ubuntu.sh) before you run it.
 
-Simply copy/paste that script into your terminal and it will:
+Simply copy/paste the command into your terminal, logged in as the root user, or another that has sudo privileges, and it will:
 
-* install Docker
-* install Docker Compose
-* grant the ability for your local user to run Docker commands without using `sudo`
-* download this repository to your home folder.
+* Install Docker
+* Install Docker Compose
+* Configure a 2GB swap file that will survive reboots
+* Adjust system config related to swap performance
+* Grant the ability for your local user to run Docker commands without using `sudo`
+* Download this repository to your home folder
+* Create a default `.env` environment file, ready for you to edit
 
-**Important**: You should close your terminal and login again now to make sure that the changes in the script are fully applied.
+**Important**: You should close your terminal SSH session and login again after running it to make sure that the changes in the script are fully applied.
 
 ### Configure Your Node
 
@@ -191,6 +208,8 @@ CHAINPOINT_NODE_PUBLIC_URI=
 `NODE_TNT_ADDRESS` : should be set to your Ethereum address that contains TNT balance. It will start with `0x` and have an additional 40 hex characters (`0-9, a-f, A-F`). This is the unique identifier for your Node.
 
 `CHAINPOINT_NODE_PUBLIC_URI` : should be a URI where your Node can be publicly discovered and utilized by others. This might look like `http://10.1.1.20`. Your Node will run on port `80` over `http`. If provided, this address will be periodically audited by Tierion Core to ensure compliance with the rules for a healthy Node. If you leave this config value blank, it will be assumed that your Node is not publicly available, and you will not be eligible to earn TNT rewards.
+
+Once running you should be able to visit `http://YOURIP/config` from another host on the Internet and see a JSON response.
 
 ### Node Firewall
 
@@ -227,7 +246,7 @@ You can run `make logs` to tail the logfiles for all `docker-compose` managed se
 
 When you start your Node you'll see in the logs that your Node will attempt to register itself with one of our Tierion Core clusters and will be provided with a secret key.
 
-The Node will then go through a process of downloading, and cryptographically verifying the entire Calendar. Every block will have its signature checked and will be stored locally. This process may take some time on first run as our Calendar grows. After initial sync, all incremental changes will also be pulled down to every Node, verified and stored.
+The Node will then go through a process of downloading, and cryptographically verifying the entire Chainpoint Calendar. Every block will have its signature checked and will be stored locally. This process may take some time on first run as our Calendar grows. After initial sync, all incremental changes will also be pulled down to every Node, verified and stored.
 
 If there are any problems you see in the logs, or if something is not working as expected, please [file a bug](https://github.com/chainpoint/chainpoint-node/issues) and provide as much information about the issue as possible.
 
@@ -263,7 +282,7 @@ Once your Node starts and registers itself a secret key will be provided for you
 submitting hashes and performing other actions. The database can hold multiple authentication keys
 and will choose the right one based on the Ethereum address you've configured in the `NODE_TNT_ADDRESS` environment variable in the `.env` file.
 
-If this secret key is lost, you will likely need to switch to another Ethereum address, and any credits on Tierion Core will be inaccessible. When you first start your Node this secret key is displayed in the logs. You will want to store it somewhere in case of accidental deletion.
+If this secret key is lost, you will likely need to switch to another Ethereum address. You will want to store it somewhere in case of accidental deletion.
 
 Its easy to export your keys at any time by issuing the command `make auth-keys`. This will
 select the keys from the database and print them out to the console. Just copy and paste them
@@ -280,6 +299,12 @@ You can verify that your keys were imported successfully by running `make auth-k
 When you run `make auth-key-update` your Node will be automatically restarted.
 
 On successful restart you should see log messages in `make logs` indicating use of your new auth key.
+
+## Frequently Asked Questions
+
+Answers to many questions that have been raised by Node operators, and helpful tips, can be found in our [FAQ](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node)
+
+Please refer to this document before filing any issues.
 
 ## License
 

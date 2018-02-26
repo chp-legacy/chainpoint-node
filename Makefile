@@ -32,9 +32,14 @@ up: extras ntpd-start
 down: ntpd-stop
 	@docker-compose down
 
-## restart         : Restart Node
+## restart         : Restart only chainpoint-node service
 .PHONY : restart
-restart: down up
+restart:
+	@docker-compose restart chainpoint-node 
+
+## restart-all     : Restart all services
+.PHONY : restart-all
+restart-all: down up
 
 ## logs            : Tail Node logs
 .PHONY : logs
@@ -78,7 +83,7 @@ build-config:
 git-pull:
 	@git pull
 
-## upgrade         : Same as `make down && git pull && make up`
+## upgrade         : Stop all, git pull, and start all
 .PHONY : upgrade
 upgrade: down git-pull up
 
