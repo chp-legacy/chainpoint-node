@@ -1,6 +1,7 @@
 # Chainpoint Node
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## About
@@ -229,7 +230,8 @@ After finishing the configuration in the `.env` file and saving it make sure you
 
 * `make up` : start all services
 * `make down` : stop all services
-* `make upgrade` : upgrade to newest release
+* `make upgrade` : upgrade to newest release in git, restarting *all* services
+* `make restart` : restart only the Node software. DB services and git unaffected.
 * `make logs` : show, and tail, the `docker-compose` logfiles
 * `make ps` : show the status of the running processes
 
