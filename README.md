@@ -313,7 +313,7 @@ Please refer to this document before filing any issues.
 [Apache License, Version 2.0](https://opensource.org/licenses/Apache-2.0)
 
 ```
-Copyright (C) 2017 Tierion
+Copyright (C) 2017-2018 Tierion
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
