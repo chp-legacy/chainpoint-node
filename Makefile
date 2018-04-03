@@ -161,3 +161,10 @@ ntpd-stop:
 ntpd-status:
 	@echo ''
 	@docker exec -it chainpoint-ntpd ntpctl -s all
+
+# private target. Upload the installer shell script to a common location.
+.PHONE : upload-installer
+upload-installer:
+	gsutil cp scripts/setup.sh gs://chainpoint-node/setup.sh
+	gsutil acl ch -u AllUsers:R gs://chainpoint-node/setup.sh
+	gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" gs://chainpoint-node/setup.sh

@@ -1,14 +1,24 @@
 #!/usr/bin/env bash
 set -e
 
+# Copyright 2017-2018 Tierion
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # Tested with Google and Digital Ocean Ubuntu 16.04 LTS Virtual Machines
-#
 #
 # You can run this startup script manually, by copying it to the host,
 # or by issuing this curl command. Since this command pipes the script
 # directly into a bash shell you should examine the script before running.
 #
-#   curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/c1f65f79a831caae2ccadac2568620867dd80e1a/scripts/docker-install-ubuntu.sh | bash
+#   curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
 #
 # Digital Ocean provides good documentation on how to manually install
 # Docker on their platform.
@@ -18,12 +28,22 @@ set -e
 # Pre-requisites:
 # - 64-bit Ubuntu 16.04 server
 # - Non-root user with sudo privileges
-#
 
 # Don't run this script more than once!
 if [ -f /.chainpoint-installer-run ]; then
     echo "Looks like this script has already been run. Exiting!"
     exit 0
+fi
+
+# Make sure we're running on Ubuntu 16.04 (Xenial)
+if [ "$(. /etc/os-release; echo $NAME)" != "Ubuntu" ]; then
+  echo "Looks like you are not running this on an Ubuntu OS. Exiting!"
+  exit 1
+fi
+
+if [ "$(. /etc/os-release; echo $UBUNTU_CODENAME)" != "xenial" ]; then
+  echo "Looks like you are not running this on Ubuntu version 16.04 (Xenial). Exiting!"
+  exit 1
 fi
 
 echo '#################################################'
@@ -45,7 +65,7 @@ echo '#################################################'
 echo 'Installing Docker Compose'
 echo '#################################################'
 sudo mkdir -p /usr/local/bin
-sudo curl -s -L "https://github.com/docker/compose/releases/download/1.16.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -s -L "https://github.com/docker/compose/releases/download/1.20.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 echo '#################################################'

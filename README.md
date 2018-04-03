@@ -165,7 +165,7 @@ For some systems you will need to separately install `docker-compose`.
 To make this process easier we have created a small script, designed to be run on Ubuntu 16.04 systems, that will install all runtime dependencies with a simple one-line command:
 
 ```
-curl -sSL https://cdn.rawgit.com/chainpoint/chainpoint-node/c1f65f79a831caae2ccadac2568620867dd80e1a/scripts/docker-install-ubuntu.sh | bash
+curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
 ```
 
 Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/docker-install-ubuntu.sh) before you run it.
@@ -313,7 +313,7 @@ Please refer to this document before filing any issues.
 [Apache License, Version 2.0](https://opensource.org/licenses/Apache-2.0)
 
 ```
-Copyright (C) 2017 Tierion
+Copyright (C) 2017-2018 Tierion
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

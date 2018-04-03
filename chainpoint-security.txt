@@ -43,30 +43,13 @@ keys are also available from the Core `/config` endpoints.
   }
 
 
-TNT -> Credits
------------------------------------------------------------
-
-When sending TNT to the Core service, in exchange
-for Node operating credits, always send the TNT
-to the Ethereum address:
-
-0xddfff2b78463ab1ca781e853bb888fdfd06083d3
-
-You must *always* send to this address from the
-same Ethereum account your Node is registered with.
-
-
 TNT Rewards
 -----------------------------------------------------------
 
-Rewards are issued every thirty minutes to a Node that
-passes the eligibility criteria. Three Hundred Million
-Tierion Network Tokens (TNT) will be distributed via
-rewards over nearly eight years.
+Rewards are issued periodically to a Node that
+passes the eligibility criteria.
 
-Tierion is ineligible to receive rewards. If Tierion
-is selected to anchor, 100% of the reward goes to the
-Node operator. 
+Tierion is ineligible to receive rewards.
 
 The current Ethereum address that is used to pay rewards is:
 
@@ -94,7 +77,7 @@ https://keybase.io/tierion
 
 http://pgp.mit.edu/pks/lookup?op=get&search=0xAB003F4636464A38
 
-The only location that should be used to retrieve this
+A good location that can be used to retrieve this
 file is the official Keybase signed filesystem for the
 'tierion' account:
 
@@ -113,14 +96,13 @@ gpg --verify chainpoint-security.txt.sig chainpoint-security.txt
 For a GOOD signature you should see something like the
 following output:
 
-gpg: Signature made Sat Jul 22 10:14:21 2017 EST
+gpg: Signature made Sat Mar 24 16:52:02 2018 PDT
 gpg:                using RSA key ED9238941FDD8A7F5401EDA9A4D3FEA87211FE71
 gpg: Good signature from "Tierion Security <security@tierion.com>" [unknown]
 gpg: WARNING: This key is not certified with a trusted signature!
 gpg:          There is no indication that the signature belongs to the owner.
 Primary key fingerprint: 86B6 E539 C21B CC44 E336  4495 AB00 3F46 3646 4A38
      Subkey fingerprint: ED92 3894 1FDD 8A7F 5401  EDA9 A4D3 FEA8 7211 FE71
-
 
 Thank you for using our systems securely!
 
