@@ -182,6 +182,17 @@ Simply copy/paste the command into your terminal, logged in as the root user, or
 
 **Important**: You should close your terminal SSH session and login again after running it to make sure that the changes in the script are fully applied.
 
+### Sync your System Clock with NTP
+
+Linux servers use a system service known as the Network Time Protocol (NTP) for synchronizing themselves to extremely accurate time sources. It is quite easy to setup a server so that it will stay within milliseconds, or even microseconds, of international standard clocks.
+
+For Chainpoint Nodes we recommend using the public NTP time servers provided by Google. This will ensure that your servers are as close to Chainpoint Core server time as possible. Your Node will be continuously audited to ensure that it is within tolerances (currently max 5 seconds). Please take a moment to setup NTP to ensure you stay eligible for rewards over time.
+
+* [Google Public NTP](https://developers.google.com/time/)
+* [How to Configure NTP for Use in the NTP Pool Project on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-configure-ntp-for-use-in-the-ntp-pool-project-on-ubuntu-16-04)
+
+If your system is not running its own NTP daemon, a priviledged Docker container will attempt to start and automatically and continuously sync time for the Node.
+
 ### Configure Your Node
 
 Configuration is as simple as editing a single configuration file and providing two variables. We provide a sample configuration file in this repository called `.env.sample`.
