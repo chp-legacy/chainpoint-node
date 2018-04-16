@@ -168,7 +168,7 @@ To make this process easier we have created a small script, designed to be run o
 curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
 ```
 
-Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/docker-install-ubuntu.sh) before you run it.
+Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/setup.sh) before you run it.
 
 Simply copy/paste the command into your terminal, logged in as the root user, or another that has sudo privileges, and it will:
 
