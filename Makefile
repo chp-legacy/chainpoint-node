@@ -19,17 +19,17 @@ help : Makefile
 ## up              : Start Node
 .PHONY : up
 up: ntpd-start
-	@docker-compose up -d
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d
 
 ## down            : Shutdown Node
 .PHONY : down
 down: ntpd-stop
-	@docker-compose down
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose down
 
 ## restart         : Restart only chainpoint-node service
 .PHONY : restart
 restart:
-	@docker-compose restart chainpoint-node 
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose restart chainpoint-node 
 
 ## restart-all     : Restart all services
 .PHONY : restart-all
@@ -142,13 +142,13 @@ ntpd-start:
 		echo "Local NTPD seems to be running. Skipping chainpoint-ntpd..."; \
 	else \
 		echo Local NTPD is not running. Starting chainpoint-ntpd...; \
-		docker-compose -f docker-compose-ntpd.yaml up -d; \
+		export COMPOSE_IGNORE_ORPHANS=true; docker-compose -f docker-compose-ntpd.yaml up -d; \
 	fi
 
 ## ntpd-stop       : Stop docker ntpd
 .PHONY : ntpd-stop
 ntpd-stop:
-	-@docker-compose -f docker-compose-ntpd.yaml down;
+	-@export COMPOSE_IGNORE_ORPHANS=true; docker-compose -f docker-compose-ntpd.yaml down;
 
 ## ntpd-status     : Show docker ntpd status
 .PHONY : ntpd-status
