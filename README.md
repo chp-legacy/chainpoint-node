@@ -121,7 +121,7 @@ Nodes have been developed and tested to run on the following
 software versions.
 
 * `Docker version 17.06.2-ce, build cec0b72`
-* `docker-compose version 1.14.0, build c7bdf9e`
+* `docker-compose version 1.21.0`
 
 ## Installation
 
