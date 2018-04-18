@@ -72,14 +72,14 @@ build-config:
 	cp .env.sample .env && \
 	echo 'Copied config .env.sample to .env' || true
 
-## git-pull        : Git pull latest
-.PHONY : git-pull
-git-pull:
-	@git pull
+## git-fetch        : Git fetch latest
+.PHONY : git-fetch
+git-fetch:
+	git fetch && git checkout master && git pull
 
 ## upgrade         : Stop all, git pull, and start all
 .PHONY : upgrade
-upgrade: down git-pull up
+upgrade: down git-fetch up
 
 ## postgres        : Connect to the local PostgreSQL with `psql`
 .PHONY : postgres
