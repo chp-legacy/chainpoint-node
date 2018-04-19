@@ -82,7 +82,8 @@ git-fetch:
 upgrade: down git-fetch up
 
 guard-ubuntu:
-	@ if [ "${lsb_release -si}" != "Ubuntu" ]; then \
+	@os=$$(lsb_release -si); \
+	if [ "$${os}" != "Ubuntu" ]; then \
 		echo "You do not appear to be running on a version of Ubuntu OS"; \
 		exit 1; \
 	fi
@@ -90,8 +91,8 @@ guard-ubuntu:
 ## upgrade-docker-compose    : Upgrade local docker-compose installation
 .PHONY : upgrade-docker-compose
 upgrade-docker-compose: guard-ubuntu
-	sudo mkdir -p /usr/local/bin
-	sudo curl -s -L "https://github.com/docker/compose/releases/download/1.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	sudo mkdir -p /usr/local/bin; \
+	sudo curl -s -L "https://github.com/docker/compose/releases/download/1.21.0/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose; \
 	sudo chmod +x /usr/local/bin/docker-compose
 
 ## postgres                  : Connect to the local PostgreSQL with `psql`
