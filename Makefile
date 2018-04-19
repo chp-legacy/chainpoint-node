@@ -91,7 +91,7 @@ guard-ubuntu:
 ## upgrade-docker-compose    : Upgrade local docker-compose installation
 .PHONY : upgrade-docker-compose
 upgrade-docker-compose: guard-ubuntu
-	sudo mkdir -p /usr/local/bin; \
+	@sudo mkdir -p /usr/local/bin; \
 	sudo curl -s -L "https://github.com/docker/compose/releases/download/1.21.0/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose; \
 	sudo chmod +x /usr/local/bin/docker-compose
 
