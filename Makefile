@@ -98,21 +98,21 @@ upgrade-docker-compose: guard-ubuntu
 ## postgres                  : Connect to the local PostgreSQL with `psql`
 .PHONY : postgres
 postgres:
-	@docker-compose up -d postgres
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres
 	@sleep 6
 	@docker exec -it postgres-node psql -U chainpoint
 
 ## redis                     : Connect to the local Redis with `redis-cli`
 .PHONY : redis
 redis:
-	@docker-compose up -d redis
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d redis
 	@sleep 2
 	@docker exec -it redis-node redis-cli
 
 ## auth-keys                 : Export HMAC auth keys from PostgreSQL
 .PHONY : auth-keys
 auth-keys:
-	@docker-compose up -d postgres	
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres	
 	@sleep 6
 	@docker exec -it postgres-node psql -U chainpoint -c 'SELECT * FROM hmackeys;'
 
@@ -133,7 +133,7 @@ auth-key-delete: guard-NODE_TNT_ADDRESS up
 ## calendar-delete           : Delete all calendar data for this Node
 .PHONY : calendar-delete
 calendar-delete: 
-	@docker-compose up -d postgres
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres
 	@sleep 6
 	@docker exec -it postgres-node psql -U chainpoint -c "DELETE FROM calendar"
 	make restart
