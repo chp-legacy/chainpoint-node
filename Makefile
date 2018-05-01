@@ -109,24 +109,15 @@ redis:
 	@sleep 2
 	@docker exec -it redis-node redis-cli
 
-## auth-keys                 : Export HMAC auth keys from PostgreSQL
+# DEPRECATED : Will still work for now, remove after 7/1/2018.
 .PHONY : auth-keys
-auth-keys:
-	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres
-	@sleep 6
-	@docker exec -it postgres-node psql -U chainpoint -c 'SELECT * FROM hmackeys;'
+auth-keys: backup-auth-keys
+	@echo -n "WARNING : 'make auth-keys' is deprecated. Please use 'make backup-auth-keys' instead."
 
-## backup-auth-keys              : Backup all auth keys to the keys/backups dir
+## backup-auth-keys          : Backup HMAC Auth keys to the 'keys/backups' dir
 .PHONY : backup-auth-keys
-backup-auth-keys:
-	@docker exec -it chainpointnodesrc_chainpoint-node_1 node auth-keys-backup-script.js
-
-## auth-key-delete           : Delete HMAC auth key with `NODE_TNT_ADDRESS` var. Example `make auth-key-delete NODE_TNT_ADDRESS=0xmyethaddress`
-.PHONY : auth-key-delete
-auth-key-delete: guard-NODE_TNT_ADDRESS up
-	@sleep 6
-	@docker exec -it postgres-node psql -U chainpoint -c "DELETE FROM hmackeys WHERE tnt_addr = LOWER('$(NODE_TNT_ADDRESS)')"
-	make restart
+backup-auth-keys: up
+	@docker exec -it chainpoint-node node auth-keys-backup-script.js
 
 ## calendar-delete           : Delete all calendar data for this Node
 .PHONY : calendar-delete
@@ -135,12 +126,6 @@ calendar-delete:
 	@sleep 6
 	@docker exec -it postgres-node psql -U chainpoint -c "DELETE FROM calendar"
 	make restart
-
-guard-%:
-	@ if [ "${${*}}" = "" ]; then \
-		echo "Environment variable $* not set"; \
-		exit 1; \
-	fi
 
 .PHONY : sign-chainpoint-security-txt
 sign-chainpoint-security-txt:
