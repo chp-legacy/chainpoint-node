@@ -7,20 +7,20 @@
 ## About
 
 Chainpoint Nodes allows anyone to run a server that accepts hashes, anchors them to public
-blockchains, create and verify proofs, and participate in the Tierion Network.
+blockchains, create and verify proofs, and participate in the Chainpoint Network.
 
-Nodes communicate with the Tierion Core, spending TNT to anchor hashes, and gain eligibility to earn TNT by providing services to the Tierion Network.
+Nodes communicate with the Chainpoint Core, spending TNT to anchor hashes, and gain eligibility to earn TNT by providing services to the Chainpoint Network.
 
 To be eligible to earn TNT a Node must:
 
 * register with a unique Ethereum address
 * maintain a minimum balance of 5000 TNT for that address
 * provide public network services
-* pass all audits and health checks from Tierion Core
+* pass all audits and health checks from Chainpoint Core
 
 Chainpoint Nodes that don't meet these requirements won't be eligible to earn TNT through periodic rewards.
 
-Chainpoint Nodes aggregate incoming hashes into a Merkle tree every second. The Merkle root is submitted to a Tierion Core for anchoring
+Chainpoint Nodes aggregate incoming hashes into a Merkle tree every second. The Merkle root is submitted to a Chainpoint Core for anchoring
 to public blockchains.
 
 Nodes maintain a mirror of the Calendar. This allows any Node to verify any proof.
@@ -219,7 +219,7 @@ CHAINPOINT_NODE_PUBLIC_URI=
 
 `NODE_TNT_ADDRESS` : should be set to your Ethereum address that contains TNT balance. It will start with `0x` and have an additional 40 hex characters (`0-9, a-f, A-F`). This is the unique identifier for your Node.
 
-`CHAINPOINT_NODE_PUBLIC_URI` : should be a URI where your Node can be publicly discovered and utilized by others. This might look like `http://10.1.1.20`. Your Node will run on port `80` over `http`. If provided, this address will be periodically audited by Tierion Core to ensure compliance with the rules for a healthy Node. If you leave this config value blank, it will be assumed that your Node is not publicly available, and you will not be eligible to earn TNT rewards.
+`CHAINPOINT_NODE_PUBLIC_URI` : should be a URI where your Node can be publicly discovered and utilized by others. This might look like `http://10.1.1.20`. Your Node will run on port `80` over `http`. If provided, this address will be periodically audited by Chainpoint Core to ensure compliance with the rules for a healthy Node. If you leave this config value blank, it will be assumed that your Node is not publicly available, and you will not be eligible to earn TNT rewards.
 
 Once running you should be able to visit `http://YOURIP/config` from another host on the Internet and see a JSON response.
 
@@ -257,7 +257,7 @@ You can run `make ps` to see the services that are running.
 
 You can run `make logs` to tail the logfiles for all `docker-compose` managed services.
 
-When you start your Node you'll see in the logs that your Node will attempt to register itself with one of our Tierion Core clusters and will be provided with a secret key.
+When you start your Node you'll see in the logs that your Node will attempt to register itself with one of our Chainpoint Core clusters and will be provided with a secret key.
 
 The Node will then go through a process of downloading, and cryptographically verifying the entire Chainpoint Calendar. Every block will have its signature checked and will be stored locally. This process may take some time on first run as our Calendar grows. After initial sync, all incremental changes will also be pulled down to every Node, verified and stored.
 
@@ -288,30 +288,50 @@ verify that everything is stopped with `make ps`.
 
 ### Node Authentication Key Backup/Restore
 
-You should understand how Node registration and authentication works. You are strongly encouraged to backup your authentication key(s). The following info may be useful if you need to backup/restore a Node
-and run it on another host.
+#### Backup
 
-Once your Node starts and registers itself a secret key will be provided for your system and stored in the Node's local database. The Node will use this key to authenticate itself to Tierion Core when
-submitting hashes and performing other actions. The database can hold multiple authentication keys
-and will choose the right one based on the Ethereum address you've configured in the `NODE_TNT_ADDRESS` environment variable in the `.env` file.
+*tl;dr* : Backup your auth keys using `make backup-auth-keys` and store those backups elsewhere!!!
 
-If this secret key is lost, you will likely need to switch to another Ethereum address. You will want to store it somewhere in case of accidental deletion.
+You should understand how Node registration and authentication works. You are strongly
+encouraged to backup your authentication key(s). The following info may be useful
+if you need to backup/restore a Node and run it on another host.
 
-Its easy to export your keys at any time by issuing the command `make auth-keys`. This will
-select the keys from the database and print them out to the console. Just copy and paste them
-somewhere safe.
+Once your Node starts and registers itself with Chainpoint Core a secret key, sometimes referred to
+as an `HMAC` or `Auth` key, will be generated and shared with your Node. This key sharing will only ever
+take place once, at the moment when you first register your Node. The key will be stored in your Node's
+local database. Every time that your Node starts it will use this key to authenticate itself to
+Chainpoint Core when submitting hashes and performing other actions. The Node's database can store
+multiple auth keys and will choose the right one based on the Ethereum address you've configured
+in the `NODE_TNT_ADDRESS` environment variable in your Node's `.env` file.
 
-You can also import an Ethereum address and secret key into your Node's database when restoring
-from backup using the following procedure.
+*WARNING* : If this secret key is lost:
 
-* Ensure that the `NODE_TNT_ADDRESS` environment variable in your `.env` file is set to the Ethereum address you want to set an auth key for.
-* Run `make auth-key-update KEY=mysecrethexkey` replacing `mysecrethexkey` with the specific hex auth key generated for the `NODE_TNT_ADDRESS` you set.
+* you can't recover it by any other means
+* there is no way to "reset" the auth key associated with your Ethereum (TNT) address
+* you will not be able to start another Node using the same Ethereum address.
 
-You can verify that your keys were imported successfully by running `make auth-keys` again.
+To avoid loss you will want to store it somewhere safe in case of accidental deletion.
 
-When you run `make auth-key-update` your Node will be automatically restarted.
+Its easy to export your keys at any time by issuing the command `make backup-auth-keys` in
+your Node directory. This will create a backup file for every auth key in your database in
+the `keys/backups` sub-directory of your Node. The filename of the backup is composed of
+the combination of your ETH address and the current time in the form: `ETH_ADDRESS-TIMESTAMP.key`.
+The contents of the file will be a single line of text which is the HMAC Auth key associated
+with that address.
 
-On successful restart you should see log messages in `make logs` indicating use of your new auth key.
+The `make backup-auth-keys` command can be run without fear of overwriting existing files since
+it includes a timestamp in the backup filename.
+
+#### Restore
+
+You can easily restore the auth key to your Node's local database using the following procedure:
+
+* Copy one or more backup files, created previously, to the `keys` sub-directory of your Node (not `keys/backups`).
+* Ensure the `NODE_TNT_ADDRESS` environment variable in your `.env` config file is set to the Ethereum address represented in the filename of a backup `.key` file.
+* Start your Node using `make up`. On startup, if the Node software finds `.key` files in the appropriate location it will automatically import them and restart your Node to make use of the new key.
+
+You can verify that your keys were imported successfully by running `make backup-auth-keys` again and inspecting the files
+created in the `keys/backups` directory.
 
 ## Frequently Asked Questions
 
@@ -341,5 +361,5 @@ limitations under the License.
 
 ## Thank You!
 
-Thank you for being an active participant in the Tierion Network and for your interest in running a Chainpoint Node. We couldn't do it without you!
+Thank you for being an active participant in the Chainpoint Network and for your interest in running a Chainpoint Node. We couldn't do it without you!
 
