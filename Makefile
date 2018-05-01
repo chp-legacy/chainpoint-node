@@ -29,7 +29,7 @@ down: ntpd-stop
 ## restart                   : Restart only chainpoint-node service
 .PHONY : restart
 restart:
-	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose restart chainpoint-node 
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose restart chainpoint-node
 
 ## restart-all               : Restart all services
 .PHONY : restart-all
@@ -112,16 +112,14 @@ redis:
 ## auth-keys                 : Export HMAC auth keys from PostgreSQL
 .PHONY : auth-keys
 auth-keys:
-	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres	
+	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres
 	@sleep 6
 	@docker exec -it postgres-node psql -U chainpoint -c 'SELECT * FROM hmackeys;'
 
-## auth-key-update           : Update HMAC auth key with `KEY` (hex string) var. Example `make auth-key-update KEY=mysecrethexkey`
-.PHONY : auth-key-update
-auth-key-update: guard-KEY up
-	@sleep 6
-	@source .env && docker exec -it postgres-node psql -U chainpoint -c "INSERT INTO hmackeys (tnt_addr, hmac_key, version, created_at, updated_at) VALUES (LOWER('$$NODE_TNT_ADDRESS'), LOWER('$(KEY)'), 1, clock_timestamp(), clock_timestamp()) ON CONFLICT (tnt_addr) DO UPDATE SET hmac_key = LOWER('$(KEY)'), version = 1, updated_at = clock_timestamp()"
-	make restart
+## backup-auth-keys              : Backup all auth keys to the keys/backups dir
+.PHONY : backup-auth-keys
+backup-auth-keys:
+	@docker exec -it chainpointnodesrc_chainpoint-node_1 node auth-keys-backup-script.js
 
 ## auth-key-delete           : Delete HMAC auth key with `NODE_TNT_ADDRESS` var. Example `make auth-key-delete NODE_TNT_ADDRESS=0xmyethaddress`
 .PHONY : auth-key-delete
@@ -132,7 +130,7 @@ auth-key-delete: guard-NODE_TNT_ADDRESS up
 
 ## calendar-delete           : Delete all calendar data for this Node
 .PHONY : calendar-delete
-calendar-delete: 
+calendar-delete:
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres
 	@sleep 6
 	@docker exec -it postgres-node psql -U chainpoint -c "DELETE FROM calendar"
