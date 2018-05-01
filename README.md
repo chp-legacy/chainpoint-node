@@ -315,7 +315,7 @@ To avoid loss you will want to store it somewhere safe in case of accidental del
 Its easy to export your keys at any time by issuing the command `make backup-auth-keys` in
 your Node directory. This will create a backup file for every auth key in your database in
 the `keys/backups` sub-directory of your Node. The filename of the backup is composed of
-the combination of your ETH address and the current time in the form: `ETH_ADDRESS-TIMESTAMP.key`.
+the combination of your ETH address and the current time in the form: `<ETH_ADDRESS>-<TIMESTAMP>.key`.
 The contents of the file will be a single line of text which is the HMAC Auth key associated
 with that address.
 
