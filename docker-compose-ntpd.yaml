@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   chainpoint-ntpd:
-    image: gcr.io/chainpoint-registry/chainpoint-ntpd:latest
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-ntpd:eeb40eb7d04c4c57915ae8e0c52298dcafc90f1d
     container_name: chainpoint-ntpd
     hostname: ntpd
     restart: always

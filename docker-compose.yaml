@@ -19,7 +19,7 @@ services:
       POSTGRES_PASSWORD: chainpoint
 
   redis:
-    image: redis:4.0.8-alpine
+    image: redis:4.0.9-alpine
     container_name: redis-node
     restart: always
     networks:
@@ -32,11 +32,12 @@ services:
       - /usr/local/etc/redis/redis.conf
 
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/chainpoint-node@sha256:bec6821c4b577d737120b0bc7d325a8b2298c005f0cdb0efd3275be96bdd12bb
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:232680adacf1bae8a5fea2d9bbde7c268c2313d3
     container_name: chainpoint-node
     restart: on-failure
     volumes:
       - ./ip-blacklist.txt:/home/node/app/ip-blacklist.txt:ro
+      - ./keys:/home/node/app/keys
     ports:
       - "80:8080"
     networks:
@@ -48,4 +49,5 @@ services:
       NODE_TNT_ADDRESS: ${NODE_TNT_ADDRESS}
       CHAINPOINT_NODE_PUBLIC_URI: "${CHAINPOINT_NODE_PUBLIC_URI:-http://0.0.0.0}"
       CHAINPOINT_CORE_API_BASE_URI: "${CHAINPOINT_CORE_API_BASE_URI:-http://0.0.0.0}"
+      CHAINPOINT_NODE_UI_PASSWORD: "${CHAINPOINT_NODE_UI_PASSWORD:-empty}"
       #DEBUG: "sequelize*"

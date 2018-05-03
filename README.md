@@ -7,32 +7,29 @@
 ## About
 
 Chainpoint Nodes allows anyone to run a server that accepts hashes, anchors them to public
-blockchains, create and verify proofs, and participate in the Tierion Network.
+blockchains, create and verify proofs, and participate in the Chainpoint Network.
 
-Nodes communicate with the Tierion Core, spending TNT to anchor hashes, and gain eligibility to earn TNT by providing services to the Tierion Network.
+Nodes communicate with the Chainpoint Core, spending TNT to anchor hashes, and gain eligibility to earn TNT by providing services to the Chainpoint Network.
 
 To be eligible to earn TNT a Node must:
 
 * register with a unique Ethereum address
-* maintain a minimum balance of 5000 TNT for that address
+* maintain a minimum balance of 5000 TNT at that address
 * provide public network services
-* pass all audits and health checks from Tierion Core
+* pass audits and health checks from Chainpoint Core
 
-Chainpoint Nodes that don't meet these requirements won't be eligible to earn TNT through periodic rewards.
+__*Chainpoint Nodes that don't meet all these requirements consistently won't be eligible to earn TNT through periodic rewards.*__
 
-Chainpoint Nodes aggregate incoming hashes into a Merkle tree every second. The Merkle root is submitted to a Tierion Core for anchoring
-to public blockchains.
+### What does a Node do?
 
-Nodes maintain a mirror of the Calendar. This allows any Node to verify any proof.
+Chainpoint Nodes aggregate incoming hashes into a Merkle tree every second. The Merkle root is submitted to Chainpoint Core for anchoring to public blockchains.
+
+Nodes allow clients to retrieve proofs for hashes that were previously submitted.
+
+Nodes maintain a public mirror of the Calendar. This allows *any* Node to verify *any* proof.
 
 Nodes expose a public HTTP API, documented with Swagger, that you can explore:
 [https://app.swaggerhub.com/apis/chainpoint/node/1.0.0](https://app.swaggerhub.com/apis/chainpoint/node/1.0.0)
-
-### Important Notice
-
-This document contains instructions for installing and running
-a Chainpoint Node. If you are looking for the full source code
-for this application see [github.com/chainpoint/chainpoint-node-src](https://github.com/chainpoint/chainpoint-node-src)
 
 ## About the Technology
 
@@ -52,15 +49,14 @@ software.
 
 When started, `docker-compose` will install and run three system components in the Docker virtual machine.
 
-* PostgreSQL Database
-* Redis
-* Chainpoint Node (Node.js)
-* NTP server (if not already running)
+* PostgreSQL DB
+* Redis DB
+* Chainpoint Node (a Node.js API server)
+* NTP Time server (if not already running)
 
-They are started as a group and should not interfere with any other
-software systems running on your server.
+These applications are started as a group and should not interfere with any other software systems running on your server. We do recommend running a Node on a server dedicated to that task.
 
-Each Node instance you want to run will need:
+Each Node instance you want to run will need to be configured with:
 
 * A dedicated Ethereum address
 * Public IP address
@@ -68,8 +64,7 @@ Each Node instance you want to run will need:
 
 ### System Requirements
 
-The software should be able to be run on any system that supports
-the Docker and Docker Compose container management tools and meets the minimal hardware requirements.
+The software should be able to be run on any system that supports the Docker and Docker Compose container management tools and meets the minimal hardware requirements.
 
 #### Hardware
 
@@ -121,7 +116,7 @@ Nodes have been developed and tested to run on the following
 software versions.
 
 * `Docker version 17.06.2-ce, build cec0b72`
-* `docker-compose version 1.14.0, build c7bdf9e`
+* `docker-compose version 1.21.0`
 
 ## Installation
 
@@ -129,7 +124,7 @@ This software is designed to be simple to install and run
 on supported systems. Please follow the instructions below
 to get started.
 
-For illustrative purposes, we'll provide instructions for running a Node on Digital Ocean, a cloud VPS provider that gives you root access to a host at minimal monthly cost.
+The following instructions should run on any public host running the `Ubuntu 16.04 LTS` operating system.
 
 ### Prerequisites
 
@@ -150,25 +145,19 @@ Your first step is to start a server and gain SSH access
 to your account on that server. This is beyond the scope of this document. You will need:
 
 * `root` access, or a user with `sudo` priveleges
-* Ubuntu 16.04 OS
+* Ubuntu 16.04 LTS OS
 
-Log in to your server and continue to the next step.
+Log in to your server via SSH and continue to the next step, installing Docker and `docker-compose`.
 
 ### Install Docker and Docker Compose
 
-There are [good instructions available](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) for installing Docker on an Ubuntu server.
-
-There are also [official docs for installing Docker](https://docs.docker.com/engine/installation/) on other systems.
-
-For some systems you will need to separately install `docker-compose`.
-
-To make this process easier we have created a small script, designed to be run on Ubuntu 16.04 systems, that will install all runtime dependencies with a simple one-line command:
+To make this process easy we have created a small script, designed to be run on `Ubuntu 16.04 LTS`, that will install all runtime dependencies with a simple one-line command:
 
 ```
 curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
 ```
 
-Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/docker-install-ubuntu.sh) before you run it.
+Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/setup.sh) before you run it.
 
 Simply copy/paste the command into your terminal, logged in as the root user, or another that has sudo privileges, and it will:
 
@@ -180,7 +169,15 @@ Simply copy/paste the command into your terminal, logged in as the root user, or
 * Download this repository to your home folder
 * Create a default `.env` environment file, ready for you to edit
 
-**Important**: You should close your terminal SSH session and login again after running it to make sure that the changes in the script are fully applied.
+**Important**: You should close your terminal SSH session and login again after running it to make sure that the changes in the script are fully applied. You do not need to reboot your server.
+
+#### Manual Install
+
+If you prefer to do things manually there are [good instructions available](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) for installing Docker on an Ubuntu server.
+
+There are also [official docs for installing Docker](https://docs.docker.com/engine/installation/) on other systems.
+
+For some systems you will need to separately install `docker-compose`.
 
 ### Sync your System Clock with NTP
 
@@ -191,7 +188,7 @@ For Chainpoint Nodes we recommend using the public NTP time servers provided by 
 * [Google Public NTP](https://developers.google.com/time/)
 * [How to Configure NTP for Use in the NTP Pool Project on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-configure-ntp-for-use-in-the-ntp-pool-project-on-ubuntu-16-04)
 
-If your system is not running its own NTP daemon, a priviledged Docker container will attempt to start and automatically and continuously sync time for the Node.
+If your system is not running its own NTP daemon (many do so by default), a priviledged Docker container will attempt to start and continuously sync time for the Node.
 
 ### Configure Your Node
 
@@ -219,25 +216,26 @@ CHAINPOINT_NODE_PUBLIC_URI=
 
 `NODE_TNT_ADDRESS` : should be set to your Ethereum address that contains TNT balance. It will start with `0x` and have an additional 40 hex characters (`0-9, a-f, A-F`). This is the unique identifier for your Node.
 
-`CHAINPOINT_NODE_PUBLIC_URI` : should be a URI where your Node can be publicly discovered and utilized by others. This might look like `http://10.1.1.20`. Your Node will run on port `80` over `http`. If provided, this address will be periodically audited by Tierion Core to ensure compliance with the rules for a healthy Node. If you leave this config value blank, it will be assumed that your Node is not publicly available, and you will not be eligible to earn TNT rewards.
+`CHAINPOINT_NODE_PUBLIC_URI` : should be a URI where your Node can be publicly discovered and utilized by others. This might look like `http://10.1.1.20`. Your Node will run on port `80` over `http`. If provided, this address will be periodically audited by Chainpoint Core to ensure compliance with the rules for a healthy Node. If you leave this config value blank, it will be assumed that your Node is not publicly available, and you will not be eligible to earn TNT rewards.
 
 Once running you should be able to visit `http://YOURIP/config` from another host on the Internet and see a JSON response.
 
 ### Node Firewall
 
-You will need to expose port 80 (HTTP) to the world if you want your Node to be available for
-clients to connect to. This is true whether you run behind a non-public host behind a firewall
-or publicly. By default, most cloud compute server providers will block all access to your
-host's ports by default (usually with the exception of port 22 (SSH)). If your provider
-does not implement a block by default policy you are encouraged to choose another provider
-or to configure a firewall on your Node server to block access to all ports with the
-exception of port 80 HTTP and port 22 SSH.
+The network security of a Node is solely the Node operator's responsibility. We do not manage or modify the security settings or firewall of your Node server.
+
+Most hosting providers block all incoming traffic (other than SSH on port 22) by default. You will need to expose port 80 (HTTP) to the world if you want your Node to be available for
+clients to connect to. This is true whether you run a non-public host behind a firewall
+or a public host. If your provider
+does not implement a block by default policy you are encouraged to either choose another provider
+or configure a firewall on your Node server to block access to all ports with the
+exception of port `80 (HTTP)` and port `22 (SSH)`.
 
 ### Run Your Node
 
-Now its time to start your own Node!
+Now its time to start your Node!
 
-After finishing the configuration in the `.env` file and saving it make sure you are in the `~/chainpoint-node` directory and run `make`. This will show you some Makefile commands that are available to you:
+After finishing the configuration in the `.env` file and saving it make sure you are in the `~/chainpoint-node` directory and run `make`. This will show you some Makefile commands that are available to you. Some of the more important ones are:
 
 * `make up` : start all services
 * `make down` : stop all services
@@ -248,16 +246,30 @@ After finishing the configuration in the `.env` file and saving it make sure you
 
 The simplest step at this point is to run `make up`. This
 will automatically pull down the appropriate Docker images
-(which may take a few minutes the first time, or on slower network systems) and start them. `docker-compose` will also
+(which may take a few minutes the first time, when there is an upgrade available, or on slower networks) and start them. `docker-compose` will also
 try to ensure that these services keep running, even if they were to crash (which is unlikely).
+
+If you log out of your SSH session it will have no effect on your Node as long as you start it as described above.
 
 ### Monitor Your Node
 
-You can run `make ps` to see the services that are running.
+There are two primary ways to monitor the health and operation of your Node. An authenticated web console, and via the command line.
 
-You can run `make logs` to tail the logfiles for all `docker-compose` managed services.
+#### Node Web UI
 
-When you start your Node you'll see in the logs that your Node will attempt to register itself with one of our Tierion Core clusters and will be provided with a secret key.
+Once your Node is running, you can visit the URL `http://<YOUR-NODE-IP-ADDRESS>` in a browser. This UI is not public by default and you will be prompted to authenticate. The default password for your Node UI is the same as the `NODE_TNT_ADDRESS` that you set in your `.env` config file.
+
+The Node UI will provide you with information related to the current activity of your Node, as well as statistics provided by Core about the health of your Node as measured during the twice hourly audit process and information about the count of the active Nodes in the queue. The 'Activity' page data is updated every few seconds, and the Node health information on the 'About' page is updated twice hourly. Health data is considered private to the Node and is pushed to the Node as a cryptographically signed data packet. There is no public API that similar information can be retrieved from.
+
+If you prefer to set your own password for your Node UI there are instructions provided in the `.env.sample` file.
+
+#### Command Line
+
+In a terminal SSH session run `make ps` to see the `docker` services that are running.
+
+Run `make logs` to continuously tail the logfiles for all `docker-compose` managed services.
+
+When you start your Node you'll see in the logs that your Node will attempt to register itself with one of our Chainpoint Core clusters and will be provided with a secret key.
 
 The Node will then go through a process of downloading, and cryptographically verifying the entire Chainpoint Calendar. Every block will have its signature checked and will be stored locally. This process may take some time on first run as our Calendar grows. After initial sync, all incremental changes will also be pulled down to every Node, verified and stored.
 
@@ -271,9 +283,9 @@ Nodes will receive enough credits to submit the maximum number of hashes to Core
 
 ### Sending Hashes to Your Node with the CLI
 
-Now you should be fully up and running! You might want to try out your new Node now with the [Chainpoint CLI](https://github.com/chainpoint/chainpoint-cli).
+Now you should be fully up and running! You might want to try out your new Node with the [Chainpoint Command Line Interface (CLI)](https://github.com/chainpoint/chainpoint-cli).
 
-Normally the CLI will auto-discover a Node to send hashes to. Once you have it installed though, you can configure it to always use your Node if you prefer.
+Normally the CLI will auto-discover a Node to send hashes to. Once you have it installed, you can configure it to always use your Node if you prefer.
 
 You can either modify the Node address in the `~/.chainpoint/cli.config` to set it permanently, or you can override the Node address every time you use it like this:
 
@@ -288,30 +300,50 @@ verify that everything is stopped with `make ps`.
 
 ### Node Authentication Key Backup/Restore
 
-You should understand how Node registration and authentication works. You are strongly encouraged to backup your authentication key(s). The following info may be useful if you need to backup/restore a Node
-and run it on another host.
+#### Backup
 
-Once your Node starts and registers itself a secret key will be provided for your system and stored in the Node's local database. The Node will use this key to authenticate itself to Tierion Core when
-submitting hashes and performing other actions. The database can hold multiple authentication keys
-and will choose the right one based on the Ethereum address you've configured in the `NODE_TNT_ADDRESS` environment variable in the `.env` file.
+*tl;dr* : Backup your auth keys using `make backup-auth-keys` and store those backups elsewhere!!!
 
-If this secret key is lost, you will likely need to switch to another Ethereum address. You will want to store it somewhere in case of accidental deletion.
+You should understand how Node registration and authentication works. You are strongly
+encouraged to backup your authentication key(s). The following info may be useful
+if you need to backup/restore a Node and run it on another host.
 
-Its easy to export your keys at any time by issuing the command `make auth-keys`. This will
-select the keys from the database and print them out to the console. Just copy and paste them
-somewhere safe.
+Once your Node starts and registers itself with Chainpoint Core a secret key, sometimes referred to
+as an `HMAC` or `Auth` key, will be generated and shared with your Node. This key sharing will only ever
+take place once, at the moment when you first register your Node. The key will be stored in your Node's
+local database. Every time that your Node starts it will use this key to authenticate itself to
+Chainpoint Core when submitting hashes and performing other actions. The Node's database can store
+multiple auth keys and will choose the right one based on the Ethereum address you've configured
+in the `NODE_TNT_ADDRESS` environment variable in your Node's `.env` file.
 
-You can also import an Ethereum address and secret key into your Node's database when restoring
-from backup using the following procedure.
+*WARNING* : If this secret key is lost:
 
-* Ensure that the `NODE_TNT_ADDRESS` environment variable in your `.env` file is set to the Ethereum address you want to set an auth key for.
-* Run `make auth-key-update KEY=mysecrethexkey` replacing `mysecrethexkey` with the specific hex auth key generated for the `NODE_TNT_ADDRESS` you set.
+* you can't recover it by any other means
+* there is no way to "reset" the auth key associated with your Ethereum (TNT) address
+* you will not be able to start another Node using the same Ethereum address.
 
-You can verify that your keys were imported successfully by running `make auth-keys` again.
+To avoid loss you will want to store it somewhere safe in case of accidental deletion.
 
-When you run `make auth-key-update` your Node will be automatically restarted.
+Its easy to export your keys at any time by issuing the command `make backup-auth-keys` in
+your Node directory. This will create a backup file for every auth key in your database in
+the `keys/backups` sub-directory of your Node. The filename of the backup is composed of
+the combination of your ETH address and the current time in the form: `<ETH_ADDRESS>-<TIMESTAMP>.key`.
+The contents of the file will be a single line of text which is the HMAC Auth key associated
+with that address.
 
-On successful restart you should see log messages in `make logs` indicating use of your new auth key.
+The `make backup-auth-keys` command can be run without fear of overwriting existing files since
+it includes a timestamp in the backup filename.
+
+#### Restore
+
+You can easily restore the auth key to your Node's local database using the following procedure:
+
+* Copy one or more backup files, created previously, to the `keys` sub-directory of your Node (not `keys/backups`).
+* Ensure the `NODE_TNT_ADDRESS` environment variable in your `.env` config file is set to the Ethereum address represented in the filename of a backup `.key` file.
+* Start your Node using `make up`. On startup, if the Node software finds `.key` files in the appropriate location it will automatically import them and restart your Node to make use of the new key.
+
+You can verify that your keys were imported successfully by running `make backup-auth-keys` again and inspecting the files
+created in the `keys/backups` directory.
 
 ## Frequently Asked Questions
 
@@ -341,5 +373,4 @@ limitations under the License.
 
 ## Thank You!
 
-Thank you for being an active participant in the Tierion Network and for your interest in running a Chainpoint Node. We couldn't do it without you!
-
+Thank you for being an active participant in the Chainpoint Network and for your interest in running a Chainpoint Node. We couldn't do it without you!
