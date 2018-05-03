@@ -14,25 +14,22 @@ Nodes communicate with the Chainpoint Core, spending TNT to anchor hashes, and g
 To be eligible to earn TNT a Node must:
 
 * register with a unique Ethereum address
-* maintain a minimum balance of 5000 TNT for that address
+* maintain a minimum balance of 5000 TNT at that address
 * provide public network services
-* pass all audits and health checks from Chainpoint Core
+* pass audits and health checks from Chainpoint Core
 
-Chainpoint Nodes that don't meet these requirements won't be eligible to earn TNT through periodic rewards.
+__*Chainpoint Nodes that don't meet all these requirements consistently won't be eligible to earn TNT through periodic rewards.*__
 
-Chainpoint Nodes aggregate incoming hashes into a Merkle tree every second. The Merkle root is submitted to a Chainpoint Core for anchoring
-to public blockchains.
+### What does a Node do?
 
-Nodes maintain a mirror of the Calendar. This allows any Node to verify any proof.
+Chainpoint Nodes aggregate incoming hashes into a Merkle tree every second. The Merkle root is submitted to Chainpoint Core for anchoring to public blockchains.
+
+Nodes allow clients to retrieve proofs for hashes that were previously submitted.
+
+Nodes maintain a public mirror of the Calendar. This allows *any* Node to verify *any* proof.
 
 Nodes expose a public HTTP API, documented with Swagger, that you can explore:
 [https://app.swaggerhub.com/apis/chainpoint/node/1.0.0](https://app.swaggerhub.com/apis/chainpoint/node/1.0.0)
-
-### Important Notice
-
-This document contains instructions for installing and running
-a Chainpoint Node. If you are looking for the full source code
-for this application see [github.com/chainpoint/chainpoint-node-src](https://github.com/chainpoint/chainpoint-node-src)
 
 ## About the Technology
 
@@ -52,15 +49,14 @@ software.
 
 When started, `docker-compose` will install and run three system components in the Docker virtual machine.
 
-* PostgreSQL Database
-* Redis
-* Chainpoint Node (Node.js)
-* NTP server (if not already running)
+* PostgreSQL DB
+* Redis DB
+* Chainpoint Node (a Node.js API server)
+* NTP Time server (if not already running)
 
-They are started as a group and should not interfere with any other
-software systems running on your server.
+These applications are started as a group and should not interfere with any other software systems running on your server. We do recommend running a Node on a server dedicated to that task.
 
-Each Node instance you want to run will need:
+Each Node instance you want to run will need to be configured with:
 
 * A dedicated Ethereum address
 * Public IP address
@@ -68,8 +64,7 @@ Each Node instance you want to run will need:
 
 ### System Requirements
 
-The software should be able to be run on any system that supports
-the Docker and Docker Compose container management tools and meets the minimal hardware requirements.
+The software should be able to be run on any system that supports the Docker and Docker Compose container management tools and meets the minimal hardware requirements.
 
 #### Hardware
 
@@ -129,7 +124,7 @@ This software is designed to be simple to install and run
 on supported systems. Please follow the instructions below
 to get started.
 
-For illustrative purposes, we'll provide instructions for running a Node on Digital Ocean, a cloud VPS provider that gives you root access to a host at minimal monthly cost.
+The following instructions should run on any public host running the `Ubuntu 16.04 LTS` operating system.
 
 ### Prerequisites
 
@@ -150,19 +145,13 @@ Your first step is to start a server and gain SSH access
 to your account on that server. This is beyond the scope of this document. You will need:
 
 * `root` access, or a user with `sudo` priveleges
-* Ubuntu 16.04 OS
+* Ubuntu 16.04 LTS OS
 
-Log in to your server and continue to the next step.
+Log in to your server via SSH and continue to the next step, installing Docker and `docker-compose`.
 
 ### Install Docker and Docker Compose
 
-There are [good instructions available](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) for installing Docker on an Ubuntu server.
-
-There are also [official docs for installing Docker](https://docs.docker.com/engine/installation/) on other systems.
-
-For some systems you will need to separately install `docker-compose`.
-
-To make this process easier we have created a small script, designed to be run on Ubuntu 16.04 systems, that will install all runtime dependencies with a simple one-line command:
+To make this process easy we have created a small script, designed to be run on `Ubuntu 16.04 LTS`, that will install all runtime dependencies with a simple one-line command:
 
 ```
 curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
@@ -180,7 +169,15 @@ Simply copy/paste the command into your terminal, logged in as the root user, or
 * Download this repository to your home folder
 * Create a default `.env` environment file, ready for you to edit
 
-**Important**: You should close your terminal SSH session and login again after running it to make sure that the changes in the script are fully applied.
+**Important**: You should close your terminal SSH session and login again after running it to make sure that the changes in the script are fully applied. You do not need to reboot your server.
+
+#### Manual Install
+
+If you prefer to do things manually there are [good instructions available](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04) for installing Docker on an Ubuntu server.
+
+There are also [official docs for installing Docker](https://docs.docker.com/engine/installation/) on other systems.
+
+For some systems you will need to separately install `docker-compose`.
 
 ### Sync your System Clock with NTP
 
@@ -191,7 +188,7 @@ For Chainpoint Nodes we recommend using the public NTP time servers provided by 
 * [Google Public NTP](https://developers.google.com/time/)
 * [How to Configure NTP for Use in the NTP Pool Project on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-configure-ntp-for-use-in-the-ntp-pool-project-on-ubuntu-16-04)
 
-If your system is not running its own NTP daemon, a priviledged Docker container will attempt to start and automatically and continuously sync time for the Node.
+If your system is not running its own NTP daemon (many do so by default), a priviledged Docker container will attempt to start and continuously sync time for the Node.
 
 ### Configure Your Node
 
@@ -225,19 +222,20 @@ Once running you should be able to visit `http://YOURIP/config` from another hos
 
 ### Node Firewall
 
-You will need to expose port 80 (HTTP) to the world if you want your Node to be available for
-clients to connect to. This is true whether you run behind a non-public host behind a firewall
-or publicly. By default, most cloud compute server providers will block all access to your
-host's ports by default (usually with the exception of port 22 (SSH)). If your provider
-does not implement a block by default policy you are encouraged to choose another provider
-or to configure a firewall on your Node server to block access to all ports with the
-exception of port 80 HTTP and port 22 SSH.
+The network security of a Node is solely the Node operator's responsibility. We do not manage or modify the security settings or firewall of your Node server.
+
+Most hosting providers block all incoming traffic (other than SSH on port 22) by default. You will need to expose port 80 (HTTP) to the world if you want your Node to be available for
+clients to connect to. This is true whether you run a non-public host behind a firewall
+or a public host. If your provider
+does not implement a block by default policy you are encouraged to either choose another provider
+or configure a firewall on your Node server to block access to all ports with the
+exception of port `80 (HTTP)` and port `22 (SSH)`.
 
 ### Run Your Node
 
-Now its time to start your own Node!
+Now its time to start your Node!
 
-After finishing the configuration in the `.env` file and saving it make sure you are in the `~/chainpoint-node` directory and run `make`. This will show you some Makefile commands that are available to you:
+After finishing the configuration in the `.env` file and saving it make sure you are in the `~/chainpoint-node` directory and run `make`. This will show you some Makefile commands that are available to you. Some of the more important ones are:
 
 * `make up` : start all services
 * `make down` : stop all services
@@ -248,14 +246,28 @@ After finishing the configuration in the `.env` file and saving it make sure you
 
 The simplest step at this point is to run `make up`. This
 will automatically pull down the appropriate Docker images
-(which may take a few minutes the first time, or on slower network systems) and start them. `docker-compose` will also
+(which may take a few minutes the first time, when there is an upgrade available, or on slower networks) and start them. `docker-compose` will also
 try to ensure that these services keep running, even if they were to crash (which is unlikely).
+
+If you log out of your SSH session it will have no effect on your Node as long as you start it as described above.
 
 ### Monitor Your Node
 
-You can run `make ps` to see the services that are running.
+There are two primary ways to monitor the health and operation of your Node. An authenticated web console, and via the command line.
 
-You can run `make logs` to tail the logfiles for all `docker-compose` managed services.
+#### Node Web UI
+
+Once your Node is running, you can visit the URL `http://<YOUR-NODE-IP-ADDRESS>` in a browser. This UI is not public by default and you will be prompted to authenticate. The default password for your Node UI is the same as the `NODE_TNT_ADDRESS` that you set in your `.env` config file.
+
+The Node UI will provide you with information related to the current activity of your Node, as well as statistics provided by Core about the health of your Node as measured during the twice hourly audit process and information about the count of the active Nodes in the queue. The 'Activity' page data is updated every few seconds, and the Node health information on the 'About' page is updated twice hourly. Health data is considered private to the Node and is pushed to the Node as a cryptographically signed data packet. There is no public API that similar information can be retrieved from.
+
+If you prefer to set your own password for your Node UI there are instructions provided in the `.env.sample` file.
+
+#### Command Line
+
+In a terminal SSH session run `make ps` to see the `docker` services that are running.
+
+Run `make logs` to continuously tail the logfiles for all `docker-compose` managed services.
 
 When you start your Node you'll see in the logs that your Node will attempt to register itself with one of our Chainpoint Core clusters and will be provided with a secret key.
 
@@ -271,9 +283,9 @@ Nodes will receive enough credits to submit the maximum number of hashes to Core
 
 ### Sending Hashes to Your Node with the CLI
 
-Now you should be fully up and running! You might want to try out your new Node now with the [Chainpoint CLI](https://github.com/chainpoint/chainpoint-cli).
+Now you should be fully up and running! You might want to try out your new Node with the [Chainpoint Command Line Interface (CLI)](https://github.com/chainpoint/chainpoint-cli).
 
-Normally the CLI will auto-discover a Node to send hashes to. Once you have it installed though, you can configure it to always use your Node if you prefer.
+Normally the CLI will auto-discover a Node to send hashes to. Once you have it installed, you can configure it to always use your Node if you prefer.
 
 You can either modify the Node address in the `~/.chainpoint/cli.config` to set it permanently, or you can override the Node address every time you use it like this:
 
@@ -362,4 +374,3 @@ limitations under the License.
 ## Thank You!
 
 Thank you for being an active participant in the Chainpoint Network and for your interest in running a Chainpoint Node. We couldn't do it without you!
-
