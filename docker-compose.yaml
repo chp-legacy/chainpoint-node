@@ -32,7 +32,7 @@ services:
       - /usr/local/etc/redis/redis.conf
 
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:2bd1a71710fb422a085eb429b13b642499543fc9
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:232680adacf1bae8a5fea2d9bbde7c268c2313d3
     container_name: chainpoint-node
     restart: on-failure
     volumes:
