@@ -18,7 +18,7 @@ help : Makefile
 
 ## up                        : Start Node
 .PHONY : up
-up: ntpd-start
+up: clear-containers ntpd-start
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d
 
 ## down                      : Shutdown Node
@@ -79,13 +79,23 @@ git-fetch:
 
 ## upgrade                   : Stop all, git pull, and start all
 .PHONY : upgrade
-upgrade: down git-fetch up
+upgrade: down git-fetch clear-containers upgrade-docker-compose up
 
 guard-ubuntu:
 	@os=$$(lsb_release -si); \
 	if [ "$${os}" != "Ubuntu" ]; then \
 		echo "You do not appear to be running on a version of Ubuntu OS"; \
 		exit 1; \
+	fi
+
+## clear-containers          : Stop and remove any running Docker containers
+.PHONY : clear-containers
+clear-containers:
+	@-containers=$$(sudo docker ps -aq); \
+	if [ "$${containers}" != "" ]; then \
+		echo "flushing docker containers..."; \
+		sudo docker stop $${containers}; \
+		sudo docker rm $${containers}; \
 	fi
 
 ## upgrade-docker-compose    : Upgrade local docker-compose installation
