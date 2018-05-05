@@ -300,31 +300,32 @@ verify that everything is stopped with `make ps`.
 
 ### Node Authentication Key Backup/Restore
 
-#### Backup
-
 *tl;dr* : Backup your auth keys using `make backup-auth-keys` and store those backups elsewhere!!!
 
-You should understand how Node registration and authentication works. You are strongly
-encouraged to backup your authentication key(s). The following info may be useful
-if you need to backup/restore a Node and run it on another host.
+You are strongly encouraged to backup your authentication key(s). The following info may be useful
+if at some point in the future you need to backup/restore a Node or run it on a new host server.
+
+### About Authentication Keys
 
 Once your Node starts and registers itself with Chainpoint Core a secret key, sometimes referred to
 as an `HMAC` or `Auth` key, will be generated and shared with your Node. This key sharing will only ever
 take place once, at the moment when you first register your Node. The key will be stored in your Node's
 local database. Every time that your Node starts it will use this key to authenticate itself to
-Chainpoint Core when submitting hashes and performing other actions. The Node's database can store
-multiple auth keys and will choose the right one based on the Ethereum address you've configured
+Chainpoint Core and update your registered public IP address as needed. The Node's database can store
+multiple auth keys and will choose the matching one based on the Ethereum address you've configured
 in the `NODE_TNT_ADDRESS` environment variable in your Node's `.env` file.
 
 *WARNING* : If this secret key is lost:
 
-* you can't recover it by any other means
+* you cannot recover it by any other means
 * there is no way to "reset" the auth key associated with your Ethereum (TNT) address
-* you will not be able to start another Node using the same Ethereum address.
+* you will never be able to start another Node using the same Ethereum address.
 
-To avoid loss you will want to store it somewhere safe in case of accidental deletion.
+To avoid loss you will want to back it up and store it somewhere safe in case of accidental deletion.
 
-Its easy to export your keys at any time by issuing the command `make backup-auth-keys` in
+#### Backup
+
+It is easy to export your keys at any time by issuing the command `make backup-auth-keys` in
 your Node directory. This will create a backup file for every auth key in your database in
 the `keys/backups` sub-directory of your Node. The filename of the backup is composed of
 the combination of your ETH address and the current time in the form: `<ETH_ADDRESS>-<TIMESTAMP>.key`.
@@ -332,18 +333,50 @@ The contents of the file will be a single line of text which is the HMAC Auth ke
 with that address.
 
 The `make backup-auth-keys` command can be run without fear of overwriting existing files since
-it includes a timestamp in the backup filename.
+it includes a current timestamp in the backup filename.
 
 #### Restore
 
-You can easily restore the auth key to your Node's local database using the following procedure:
+Restoration of a backup copy of an auth key is easy. Every time a Node starts it looks at the
+contents of the `~/chainpoint-node/keys` directory. If it finds a file where the name has one
+of the following two patterns it will read the auth key out of the file and automatically import it into your node.
 
-* Copy one or more backup files, created previously, to the `keys` sub-directory of your Node (not `keys/backups`).
-* Ensure the `NODE_TNT_ADDRESS` environment variable in your `.env` config file is set to the Ethereum address represented in the filename of a backup `.key` file.
-* Start your Node using `make up`. On startup, if the Node software finds `.key` files in the appropriate location it will automatically import them and restart your Node to make use of the new key.
+* `<ETH_ADDRESS>.key`
+* `<ETH_ADDRESS>-<TIMESTAMP>.key`
 
-You can verify that your keys were imported successfully by running `make backup-auth-keys` again and inspecting the files
-created in the `keys/backups` directory.
+The contents of the `.key` file is simply the HMAC auth key for the address on a single line.
+
+A `.key` file can be created using the backup procedure above, or you can manually create it.
+If you manually create it, you don't need to include a timestamp in the filename.
+
+__Restore Manually Created File__
+
+Create a backup file (e.g. by copying data from a spreadsheet with keys). Restart your node with `make restart` after you do this.
+
+```
+# an example of creating a key backup file manually
+# run this in your `chainpoint-node` dir.
+echo -n "my-secret-auth-hmac-key" > keys/0xMYETHADDRESS.key
+```
+
+__Restore Previously Backed Up File__
+
+If you previously ran the `make backup-auth-keys` you'll have backup files in the `~/chainpoint-node/keys/backups` directory.
+
+Copy the backup file where the filename matches the `NODE_TNT_ADDRESS` you have configured in your `.env` file from the `~/chainpoint-node/keys/backups` directory to the `~/chainpoint-node/keys` directory.
+
+Restart your node with `make restart` after you do this.
+
+__Verify A Restoration__
+
+When your Node restarts, if it found a `.key` file in the `~/chainpoint-node/keys` directory it will try to restore the auth key in that file to your local database. If it succeeds you will see a line similar to the following in your `make logs` output:
+
+```
+INFO : Registration : Auth key saved to PostgreSQL : 0x<MYETHADDRESS>-<TIMESTAMP>.key
+```
+
+You can also verify that your keys were imported successfully by running `make backup-auth-keys` and inspecting the most recent files
+created in the `~/chainpoint-node/keys/backups` directory.
 
 ## Frequently Asked Questions
 

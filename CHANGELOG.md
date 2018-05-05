@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2018-05-04
+
+### Changed
+
+- Enhanced backup and restore documentation in the README.md file
+
+### Added
+
+- If a `CHAINPOINT_NODE_PUBLIC_URI` is provided (public Node) the Node will perform an HTTP health check on startup to ensure that the configured URI is the same as the Node is actually running on. Will help prevent IP misconfiguration and resulting audit failures. The Node will exit if mis-configured and can't reach itself on the IP URI configured.
+- A newly registered Node will now automatically generate a backup of the Node Auth key without user intervention. This will only be triggered on first Node registration, and not on subsequent updates.
+- A new Makefile task `make upgrade-docker-compose` which will upgrade it to version `1.21.0`. This task will now be run automatically on `make upgrade` as well.
+- A new Makefile task `make clear-containers` which will stop and remove any running Docker containers on the host. This will be run automatically on `make up` and `make upgrade` as well. This prevents occasional issues with stuck containers that would cause an error on Node upgrade.
+
+### Fixed
+
+- Node UI login on Microsoft Windows 10 - Edge browser v16 & v14 - now works.
+- Restoration of auth keys from a `.key` file where the Ethereum address in the filename is mixed case now works as expected.
+- Restoration of auth keys from a `.key` file where the file contains trailing newlines or whitespace now works as expected.
+
 ## [1.4.0] - 2018-05-03
 
 ### Added
@@ -13,7 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Local caching of Core proofs
 - Make use of new `COMPOSE_IGNORE_ORPHANS` env var with `docker-compose` to hide unneeded 'orphan container' warnings. Requires current version of `docker-compose` which can now be upgraded in place using `make upgrade-docker-compose`
 
-### Changes
+### Changed
 
 - Updated Docker ntpd image
 - New auth key backup/restore method `make backup-auth-keys` which will store backups as files in `keys/backups` directory, and allow restore from `keys` directory
