@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Node UI login on Microsoft Windows 10 - Edge browser v16 & v14 - now works.
 - Restoration of auth keys from a `.key` file where the Ethereum address in the filename is mixed case now works as expected.
+- Restoration of auth keys from a `.key` file where the file contains trailing newlines or whitespace now works as expected.
 
 ## [1.4.0] - 2018-05-03
 
