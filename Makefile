@@ -18,7 +18,7 @@ help : Makefile
 
 ## up                        : Start Node
 .PHONY : up
-up: clear-containers ntpd-start
+up: guard-ubuntu clear-containers ntpd-start
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d
 
 ## down                      : Shutdown Node
@@ -77,30 +77,31 @@ build-config:
 git-fetch:
 	git fetch && git checkout master && git pull
 
-## upgrade                   : Stop all, git pull, and start all
+## upgrade                   : Stop all, git pull, upgrade docker-compose, and start all
 .PHONY : upgrade
-upgrade: down git-fetch clear-containers upgrade-docker-compose up
+upgrade: down git-fetch clear-containers guard-ubuntu upgrade-docker-compose up
 
 guard-ubuntu:
 	@os=$$(lsb_release -si); \
 	if [ "$${os}" != "Ubuntu" ]; then \
-		echo "You do not appear to be running on a version of Ubuntu OS"; \
-		exit 1; \
+		echo "**************************************************************************"; \
+		echo "WARNING : Unsupported OS. Only Ubuntu 16.04 LTS is supported at this time."; \
+		echo "**************************************************************************"; \
 	fi
 
-## clear-containers          : Stop and remove any running Docker containers
+## clear-containers          : Stop and remove any running Chainpoint Docker containers
 .PHONY : clear-containers
 clear-containers:
-	@-containers=$$(sudo docker ps -aq -f "label=org.chainpoint.service"); \
+	@-containers=$$(docker ps -aq -f "label=org.chainpoint.service"); \
 	if [ "$${containers}" != "" ]; then \
 		echo "flushing docker containers..."; \
-		sudo docker stop $${containers}; \
-		sudo docker rm $${containers}; \
+		docker stop $${containers}; \
+		docker rm $${containers}; \
 	fi
 
 ## upgrade-docker-compose    : Upgrade local docker-compose installation
 .PHONY : upgrade-docker-compose
-upgrade-docker-compose: guard-ubuntu
+upgrade-docker-compose:
 	@sudo mkdir -p /usr/local/bin; \
 	sudo curl -s -L "https://github.com/docker/compose/releases/download/1.21.0/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose; \
 	sudo chmod +x /usr/local/bin/docker-compose
