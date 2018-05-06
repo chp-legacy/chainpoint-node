@@ -91,7 +91,7 @@ guard-ubuntu:
 ## clear-containers          : Stop and remove any running Docker containers
 .PHONY : clear-containers
 clear-containers:
-	@-containers=$$(sudo docker ps -aq); \
+	@-containers=$$(sudo docker ps -aq -f "label=org.chainpoint.service"); \
 	if [ "$${containers}" != "" ]; then \
 		echo "flushing docker containers..."; \
 		sudo docker stop $${containers}; \
