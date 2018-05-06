@@ -4,6 +4,10 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+## Frequently Asked Questions
+
+Need help? Looking for the [FAQ](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions)?
+
 ## About
 
 Chainpoint Nodes allows anyone to run a server that accepts hashes, anchors them to public
