@@ -17,6 +17,8 @@ services:
     environment:
       POSTGRES_USER: chainpoint
       POSTGRES_PASSWORD: chainpoint
+    labels:
+      org.chainpoint.service: "postgres"
 
   redis:
     image: redis:4.0.9-alpine
@@ -30,6 +32,8 @@ services:
     command:
       - redis-server
       - /usr/local/etc/redis/redis.conf
+    labels:
+      org.chainpoint.service: "redis"
 
   chainpoint-node:
     image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:8befa80d2459bbde431617e8129c6cc77fbb1b7b
@@ -51,3 +55,5 @@ services:
       CHAINPOINT_CORE_API_BASE_URI: "${CHAINPOINT_CORE_API_BASE_URI:-http://0.0.0.0}"
       CHAINPOINT_NODE_UI_PASSWORD: "${CHAINPOINT_NODE_UI_PASSWORD:-empty}"
       #DEBUG: "sequelize*"
+    labels:
+      org.chainpoint.service: "chainpoint-node"
