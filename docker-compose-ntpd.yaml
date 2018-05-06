@@ -10,3 +10,6 @@ services:
       - SYS_TIME
       - SYS_NICE
     mem_limit: 64M
+    labels:
+      org.chainpoint.service: "chainpoint-ntpd"
+
