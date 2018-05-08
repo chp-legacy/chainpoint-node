@@ -5,13 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.4.2] - 2018-05-08
 
 ### Changed
-
+ 
 - `make clear-containers` will now only apply to Chainpoint related containers.
 - `make clear-containers` no longer uses `sudo`. Assumes you have setup system so that logged-in user has permissions to docker commands without use of `sudo`.
 - The check for Ubuntu OS in certain `make` commands will no longer exit make task if Ubuntu not detected. A warning will be printed on `make up` and `make upgrade` if not running Ubuntu.
+- Log an error if `CHAINPOINT_NODE_PUBLIC_URI` is set to an RFC-1918 private IP address that will never be routable over the public Internet.
+
+### Fixed
+
+- Restoration of auth keys from a `.key` file where the file contains trailing newlines or whitespace now works as expected.
+- A spurious error related to importing a backup auth key : `INFO : Registration : HMAC Auth Key Not Found`
+- Importing an auth key backup where there is whitespace in the `.key` file.
+- The `make upgrade-docker-compose` task caused issues for some as apparently the binary download from its source Github repository is unreliable and can cause an upgrade to a corrupted binary. We are now providing a download of our own binary for `docker-compose` which is frozen into this repository as well. You can install it using `make upgrade-docker-compose` or, if your `docker-compose` install is already having issues and you can't do a normal `make upgrade`, you can use the out-of-band installation by running the following `curl` command. This will download the same frozen Linux binary. This should resolve issues with `text file busy` errors and allow you to proceed normally with `make upgrade`.
+
+```curl
+curl -sSL https://chainpoint-node.storage.googleapis.com/docker-compose-install.sh | bash
+```
+
+
 
 ## [1.4.1] - 2018-05-04
 
@@ -30,7 +44,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Node UI login on Microsoft Windows 10 - Edge browser v16 & v14 - now works.
 - Restoration of auth keys from a `.key` file where the Ethereum address in the filename is mixed case now works as expected.
-- Restoration of auth keys from a `.key` file where the file contains trailing newlines or whitespace now works as expected.
 
 ## [1.4.0] - 2018-05-03
 

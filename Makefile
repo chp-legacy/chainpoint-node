@@ -103,8 +103,7 @@ clear-containers:
 .PHONY : upgrade-docker-compose
 upgrade-docker-compose:
 	@sudo mkdir -p /usr/local/bin; \
-	sudo curl -s -L "https://github.com/docker/compose/releases/download/1.21.0/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose; \
-	sudo chmod +x /usr/local/bin/docker-compose
+	curl -sSL https://chainpoint-node.storage.googleapis.com/docker-compose-install.sh | bash
 
 ## postgres                  : Connect to the local PostgreSQL with `psql`
 .PHONY : postgres
@@ -170,3 +169,14 @@ upload-installer:
 	gsutil cp scripts/setup.sh gs://chainpoint-node/setup.sh
 	gsutil acl ch -u AllUsers:R gs://chainpoint-node/setup.sh
 	gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" gs://chainpoint-node/setup.sh
+
+# private target. Upload the docker compose installer shell script to a common location.
+.PHONE : upload-docker-compose-installer
+upload-docker-compose-installer:
+	gsutil cp docker-compose-install.sh gs://chainpoint-node/docker-compose-install.sh
+	gsutil acl ch -u AllUsers:R gs://chainpoint-node/docker-compose-install.sh
+	gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" gs://chainpoint-node/docker-compose-install.sh
+
+	gsutil cp docker-compose.tar.gz gs://chainpoint-node/docker-compose.tar.gz
+	gsutil acl ch -u AllUsers:R gs://chainpoint-node/docker-compose.tar.gz
+	gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" gs://chainpoint-node/docker-compose.tar.gz
