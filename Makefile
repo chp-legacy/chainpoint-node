@@ -127,7 +127,12 @@ auth-keys: backup-auth-keys
 ## backup-auth-keys          : Backup HMAC Auth keys to the 'keys/backups' dir
 .PHONY : backup-auth-keys
 backup-auth-keys: up
-	@docker exec -it chainpoint-node node auth-keys-backup-script.js
+	@docker exec -it chainpoint-node node auth-keys-backup.js
+
+## print-auth-keys           : Print to console the filename and contents of auth key (HMAC) backups
+.PHONY : print-auth-keys
+print-auth-keys: up
+	@docker exec -it chainpoint-node node auth-keys-print.js
 
 ## calendar-delete           : Delete all calendar data for this Node
 .PHONY : calendar-delete
