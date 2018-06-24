@@ -5,11 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.4.3] - UNRELEASED
+## [1.5.0]
+
+### Changes
+
+- Reduce retry count for failed registrations to 3.
+- Nodes that fail to register will no longer exit after retries. The Node will continue to run, allowing access to the Node UI.
+- Allow adjustment of Node hash aggregation period based on Core config.
+- Update Chainpoint library dependencies `merkle-tools` and `chainpoint-parse` to current versions.
 
 ### Added
 
 - New Makefile target for `make print-auth-keys` which will print the filename and auth key contents of each file in the `keys/backups` directory. This allows for easier copy/paste of backup key contents as an alternative to exploring the files in the `keys/backups` directory.
+- Log some additional details about cause of a failed audit to console.
+
+### Fixed
+
+- Specifying `false` as a Boolean or String to `CHAINPOINT_NODE_UI_PASSWORD` in `.env` configuration will now work as expected.
+- Update to Node UI to correctly display Node ms delta.
+- Simplify and enhance performance of Core proof retrieval.
+
 
 ## [1.4.2] - 2018-05-08
 
