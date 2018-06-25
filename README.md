@@ -8,6 +8,10 @@
 
 Need help? Looking for the [FAQ](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions)?
 
+## Quick Start
+
+Want to get going quickly? Take a look at the `QUICKSTART.md` file in this directory.
+
 ## About
 
 Chainpoint Nodes allows anyone to run a server that accepts hashes, anchors them to public
