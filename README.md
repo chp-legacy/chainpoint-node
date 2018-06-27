@@ -98,8 +98,7 @@ Bare Minimum (May encounter RAM issues, depending on host setup):
 - `10GB Hard Disk or SSD`
 - `Public IPv4 address`
 
-
-Running a Node on a server with 1GB of RAM has been [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node). 
+Running a Node on a server with 1GB of RAM has been [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node).
 
 If you are expecting larger volumes of hashes to be sent to your server its recommended that you scale-up the system resources by adding more RAM and CPU cores. Alternatively, you can scale-out horizontally by running more Nodes. The disk storage and CPU needs of a Node are relatively small, RAM is the first suggested upgrade.
 
@@ -136,10 +135,7 @@ Before you start, you will need:
 
 * An Ethereum address that you have the private keys for. Exchange provided accounts are generally not supported. You should be able to unlock your account to send Ether or TNT using MyEtherWallet for example.
 
-* You must have the mimimum balance of 5000 TNT to run a Node, and those TNT must be assigned to the Ethereum address you'll
-use to identify your Node. You can check your TNT balance
-(in Grains, divide by `100000000` (10^8) for TNT balance) using the Etherscan.io
-[contract reading tool for our ERC20 smart contract](https://etherscan.io/address/0x08f5a9235b08173b7569f83645d2c7fb55e8ccd8#readContract) (input your address in the `balanceOf` field and click `Query`).
+* You must have the mimimum balance of 5000 TNT to run a Node, and those TNT must be assigned to the Ethereum address you'll use to identify your Node. You can check your TNT balance (in Grains, divide by `100000000` (10^8) for TNT balance) using the Etherscan.io [contract reading tool for our ERC20 smart contract](https://etherscan.io/address/0x08f5a9235b08173b7569f83645d2c7fb55e8ccd8#readContract) (input your address in the `balanceOf` field and click `Query`).
 
 If you run into any issues operating your Node, the first best place to look for help is the [Frequently Asked Questions](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions) page on our Wiki.
 
@@ -157,7 +153,7 @@ Log in to your server via SSH and continue to the next step, installing Docker a
 
 To make this process easy we have created a small script, designed to be run on `Ubuntu 16.04 LTS`, that will install all runtime dependencies with a simple one-line command:
 
-```
+```sh
 curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
 ```
 
@@ -203,7 +199,7 @@ to `~/chainpoint-node/.env` for you, ready to edit.
 
 If you installed everything manually you will want to:
 
-```
+```sh
 cd ~/chainpoint-node
 cp .env.sample .env
 
@@ -213,7 +209,7 @@ vi .env
 
 There are only two values that you may need to edit (comments removed for clarity):
 
-```
+```sh
 NODE_TNT_ADDRESS=
 CHAINPOINT_NODE_PUBLIC_URI=
 ```
@@ -293,7 +289,7 @@ Normally the CLI will auto-discover a Node to send hashes to. Once you have it i
 
 You can either modify the Node address in the `~/.chainpoint/cli.config` to set it permanently, or you can override the Node address every time you use it like this:
 
-```
+```sh
 chp submit --server http://127.0.0.1 <hash>
 ```
 
@@ -359,7 +355,7 @@ __Restore Manually Created File__
 
 Create a backup file (e.g. by copying data from a spreadsheet with keys). Restart your node with `make restart` after you do this.
 
-```
+```sh
 # an example of creating a key backup file manually
 # run this in your `chainpoint-node` dir.
 echo -n "my-secret-auth-hmac-key" > keys/0xMYETHADDRESS.key
@@ -377,7 +373,7 @@ __Verify A Restoration__
 
 When your Node restarts, if it found a `.key` file in the `~/chainpoint-node/keys` directory it will try to restore the auth key in that file to your local database. If it succeeds you will see a line similar to the following in your `make logs` output:
 
-```
+```sh
 INFO : Registration : Auth key saved to PostgreSQL : 0x<MYETHADDRESS>-<TIMESTAMP>.key
 ```
 
@@ -394,7 +390,7 @@ Please refer to this document before filing any issues.
 
 [Apache License, Version 2.0](https://opensource.org/licenses/Apache-2.0)
 
-```
+```text
 Copyright (C) 2017-2018 Tierion
 
 Licensed under the Apache License, Version 2.0 (the "License");

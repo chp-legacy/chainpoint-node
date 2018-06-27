@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.5.0]
+## [1.5.0] - 2018-06-27
 
 ### Changes
 
@@ -25,11 +25,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update to Node UI to correctly display Node ms delta.
 - Simplify and enhance performance of Core proof retrieval.
 
-
 ## [1.4.2] - 2018-05-08
 
 ### Changed
- 
+
 - `make clear-containers` will now only apply to Chainpoint related containers.
 - `make clear-containers` no longer uses `sudo`. Assumes you have setup system so that logged-in user has permissions to docker commands without use of `sudo`.
 - The check for Ubuntu OS in certain `make` commands will no longer exit make task if Ubuntu not detected. A warning will be printed on `make up` and `make upgrade` if not running Ubuntu.
@@ -45,8 +44,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ```curl
 curl -sSL https://chainpoint-node.storage.googleapis.com/docker-compose-install.sh | bash
 ```
-
-
 
 ## [1.4.1] - 2018-05-04
 
