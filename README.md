@@ -306,6 +306,8 @@ verify that everything is stopped with `make ps`.
 
 *tl;dr* : Backup your auth keys using `make backup-auth-keys` and store those backups elsewhere!!!
 
+As an alternative, you can run `make print-auth-keys` to perform the backup and also print the `HMAC` keys to the console `STDOUT`.
+
 You are strongly encouraged to backup your authentication key(s). The following info may be useful
 if at some point in the future you need to backup/restore a Node or run it on a new host server.
 
