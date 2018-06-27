@@ -5,10 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2018-06-27
+
+### Changes
+
+- Reduce retry count for failed registrations to 3.
+- Nodes that fail to register will no longer exit after retries. The Node will continue to run, allowing access to the Node UI.
+- Allow adjustment of Node hash aggregation period based on Core config.
+- Update Chainpoint library dependencies `merkle-tools` and `chainpoint-parse` to current versions.
+
+### Added
+
+- New Makefile target for `make print-auth-keys` which will print the filename and auth key contents of each file in the `keys/backups` directory. This allows for easier copy/paste of backup key contents as an alternative to exploring the files in the `keys/backups` directory.
+- Auth keys will be automatically backed up to the local drive on registration.
+- Log some additional details about the cause(s) of a failed audit to the `make logs` output.
+
+### Fixed
+
+- Specifying `false` as a Boolean or String to `CHAINPOINT_NODE_UI_PASSWORD` in `.env` configuration will now work as expected.
+- Update to Node UI to correctly display Node ms delta.
+- Simplify and enhance performance of Core proof retrieval.
+
 ## [1.4.2] - 2018-05-08
 
 ### Changed
- 
+
 - `make clear-containers` will now only apply to Chainpoint related containers.
 - `make clear-containers` no longer uses `sudo`. Assumes you have setup system so that logged-in user has permissions to docker commands without use of `sudo`.
 - The check for Ubuntu OS in certain `make` commands will no longer exit make task if Ubuntu not detected. A warning will be printed on `make up` and `make upgrade` if not running Ubuntu.
@@ -24,8 +45,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ```curl
 curl -sSL https://chainpoint-node.storage.googleapis.com/docker-compose-install.sh | bash
 ```
-
-
 
 ## [1.4.1] - 2018-05-04
 

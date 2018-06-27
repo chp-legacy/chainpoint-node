@@ -1,33 +1,22 @@
-Tierion Network Security
+Chainpoint Network Security
 
 This file contains important information relevant to
-the security of the Tierion Network and Chainpoint
+the security of the Chainpoint Network and Chainpoint
 software. This is considered the canonical source of
 truth for related information.
 
 Warning : You should never accept information provided
 in public channels as being safe to use for security
 sensitive information such as Ethereum contract
-addresses. Those with malicious intent may for example
-try to intercept TNT by publishing an illicit
-destination addresses. Always consult this file if unsure.
+addresses.
 
-
-Tierion Network Core
+Chainpoint Network Core
 -----------------------------------------------------------
 
 Core Clusters:
 https://a.chainpoint.org/config
 https://b.chainpoint.org/config
 https://c.chainpoint.org/config
-
-TLS Certificate
-
-Issuer:
-CloudFlare Inc ECC CA-2
-
-SHA256 Fingerprint:
-F9 11 43 DC B4 FE 51 9F 10 74 E5 06 16 43 5A C2 1E AE 9E 37 76 46 F7 78 1C 9F 3A 05 6B FA C3 75
 
 
 Calendar Block Signature Public Keys
