@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - New Makefile target for `make print-auth-keys` which will print the filename and auth key contents of each file in the `keys/backups` directory. This allows for easier copy/paste of backup key contents as an alternative to exploring the files in the `keys/backups` directory.
-- Log some additional details about cause of a failed audit to console.
+- Auth keys will be automatically backed up to the local drive on registration.
+- Log some additional details about the cause(s) of a failed audit to the `make logs` output.
 
 ### Fixed
 
