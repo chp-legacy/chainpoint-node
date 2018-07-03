@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2018-07-03
+
+### Changes
+
+- Replaced Node local firewall with custom updatable IP filter. This eliminates the need for the Node to schedule and perform automatic restarts.
+- If a Node receives an HTTP `426 Upgrade Required` error from Core, indicating that the Node is running too old a version of the Node software to update its registration, it will no longer retry a request that cannot succeed. It will log an error message to the logs and exit.
+- During registration, if an HTTP `409 Conflict` error is thrown as a result of the Ethereum address or public URI already being registered, the Node will no longer retry and will exit.
+- When a Node is configured password with `CHAINPOINT_NODE_UI_PASSWORD=false` the Node UI will bypass the login screen and redirect the user directly to dashboard.
+
+### Fixed
+
+- An issue with persisting Redux data to browser local storage which sometimes resulted in the Node UI appearing 'stuck' and not displaying the most current data.
+- Enabled authentication form submit via [enter] key, only validate after form submitted.
+
 ## [1.5.0] - 2018-06-27
 
 ### Changes
