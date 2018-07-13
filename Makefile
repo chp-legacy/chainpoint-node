@@ -18,7 +18,7 @@ help : Makefile
 
 ## up                        : Start Node
 .PHONY : up
-up: guard-ubuntu clear-containers ntpd-start
+up: guard-ubuntu clear-containers ntpd-start build-rocksdb
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d
 
 ## down                      : Shutdown Node
@@ -169,14 +169,14 @@ ntpd-status:
 	@docker exec -it chainpoint-ntpd ntpctl -s all
 
 # private target. Upload the installer shell script to a common location.
-.PHONE : upload-installer
+.PHONY : upload-installer
 upload-installer:
 	gsutil cp scripts/setup.sh gs://chainpoint-node/setup.sh
 	gsutil acl ch -u AllUsers:R gs://chainpoint-node/setup.sh
 	gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" gs://chainpoint-node/setup.sh
 
 # private target. Upload the docker compose installer shell script to a common location.
-.PHONE : upload-docker-compose-installer
+.PHONY : upload-docker-compose-installer
 upload-docker-compose-installer:
 	gsutil cp docker-compose-install.sh gs://chainpoint-node/docker-compose-install.sh
 	gsutil acl ch -u AllUsers:R gs://chainpoint-node/docker-compose-install.sh
@@ -185,3 +185,8 @@ upload-docker-compose-installer:
 	gsutil cp docker-compose.tar.gz gs://chainpoint-node/docker-compose.tar.gz
 	gsutil acl ch -u AllUsers:R gs://chainpoint-node/docker-compose.tar.gz
 	gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" gs://chainpoint-node/docker-compose.tar.gz
+
+# private target. Ensure the RocksDB data dir exists
+.PHONY : build-rocksdb
+build-rocksdb:
+	mkdir -p ./.data/rocksdb && chmod 777 ./.data/rocksdb

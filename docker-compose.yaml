@@ -36,12 +36,13 @@ services:
       org.chainpoint.service: "redis"
 
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:95fde8312dae659fee71632b3f8e2327ede14019
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:76d0ec1811a575ec4df6d20c218b61012dab3123
     container_name: chainpoint-node
     restart: on-failure
     volumes:
       - ./ip-blacklist.txt:/home/node/app/ip-blacklist.txt:ro
       - ./keys:/home/node/app/keys
+      - ./.data/rocksdb:/home/node/app/rocksdb
     ports:
       - "80:8080"
     networks:
