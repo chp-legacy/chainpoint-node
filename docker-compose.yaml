@@ -7,7 +7,7 @@ networks:
 services:
 
   postgres:
-    image: postgres:9.6.5-alpine
+    image: postgres:9.6.9-alpine
     container_name: postgres-node
     restart: always
     networks:
@@ -21,7 +21,7 @@ services:
       org.chainpoint.service: "postgres"
 
   redis:
-    image: redis:4.0.9-alpine
+    image: redis:4.0.10-alpine
     container_name: redis-node
     restart: always
     networks:
