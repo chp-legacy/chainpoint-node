@@ -36,7 +36,7 @@ services:
       org.chainpoint.service: "redis"
 
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:6cacecea983f92e2a1803ce74acab0ddbb47e1db
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:9ba6e8563792d4ab6de090c5a08406ed77fe38a2
     container_name: chainpoint-node
     restart: on-failure
     volumes:
