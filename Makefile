@@ -84,9 +84,9 @@ upgrade: down git-fetch clear-containers guard-ubuntu upgrade-docker-compose up
 guard-ubuntu:
 	@os=$$(lsb_release -si); \
 	if [ "$${os}" != "Ubuntu" ]; then \
-		echo "**************************************************************************"; \
-		echo "WARNING : Unsupported OS. Only Ubuntu 16.04 LTS is supported at this time."; \
-		echo "**************************************************************************"; \
+		echo "*********************************************************"; \
+		echo "WARNING : Unsupported OS. Ubuntu 16.04 LTS is supported."; \
+		echo "*********************************************************"; \
 	fi
 
 ## clear-containers          : Stop and remove any running Chainpoint Docker containers
@@ -189,4 +189,4 @@ upload-docker-compose-installer:
 # private target. Ensure the RocksDB data dir exists
 .PHONY : build-rocksdb
 build-rocksdb:
-	mkdir -p ./.data/rocksdb && chmod 777 ./.data/rocksdb
+	@mkdir -p ./.data/rocksdb && chmod 777 ./.data/rocksdb
