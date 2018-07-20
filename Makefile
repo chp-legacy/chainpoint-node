@@ -186,7 +186,13 @@ upload-docker-compose-installer:
 	gsutil acl ch -u AllUsers:R gs://chainpoint-node/docker-compose.tar.gz
 	gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" gs://chainpoint-node/docker-compose.tar.gz
 
-# private target. Ensure the RocksDB data dir exists
+# private target. Ensure the RocksDB data dir exists before
+# it gets mounted into the container as a volume.
 .PHONY : build-rocksdb
 build-rocksdb:
-	@mkdir -p ./.data/rocksdb && chmod 777 ./.data/rocksdb
+	@os=$$(lsb_release -si); \
+	if [ "$${os}" = "Ubuntu" ]; then \
+		sudo mkdir -p .data/rocksdb && sudo chown root .data/rocksdb && sudo chmod 777 .data/rocksdb; \
+	else \
+		mkdir -p .data/rocksdb && chmod 777 .data/rocksdb; \
+	fi
