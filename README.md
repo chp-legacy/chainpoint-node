@@ -32,8 +32,9 @@ Nodes allow clients to retrieve proofs for hashes that were previously submitted
 
 Nodes maintain a public mirror of the Calendar. This allows *any* Node to verify *any* proof.
 
-Nodes expose a public HTTP API, documented with Swagger, that you can explore:
-[https://app.swaggerhub.com/apis/chainpoint/node/1.0.0](https://app.swaggerhub.com/apis/chainpoint/node/1.0.0)
+Nodes expose a public HTTP API. There is some additional documentation, and examples of using the Node's public HTTP API with `curl` or other clients that can be found on the Wiki:
+
+[Node HTTP API](https://github.com/chainpoint/chainpoint-node/wiki/Node-HTTP-API)
 
 ## About the Technology
 
@@ -51,19 +52,18 @@ software.
 
 ### Software Components
 
-When started, `docker-compose` will install and run three system components in the Docker virtual machine.
+When started, `docker-compose` will install and run several system components in the Docker virtual machine.
 
-* PostgreSQL DB
-* Redis DB
 * Chainpoint Node (a Node.js API server + RocksDB)
-* NTP Time server (only if not already running)
+* PostgreSQL DB
+* NTP Time server (only if NTP is not already running natively)
 
 These applications are started as a group and should not interfere with any other software systems running on your server. We do recommend running a Node on a server dedicated to that task.
 
 Each Node instance you want to run will need to be configured with:
 
 * A dedicated Ethereum address
-* Public IP address
+* Public IP address (ports `22` and `80` open)
 * Minimum TNT balance
 
 ### System Requirements
