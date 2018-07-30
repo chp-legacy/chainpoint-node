@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-create `/keys/backups` directories if previously deleted.
 - Improve detection, handling, and UI messaging in Brave browser when third-party cookies and local storage are disabled.
 - Trim whitespace from the list of hashes provided to `POST /hashes` using the `hashids` request header.
+- Further enforce Node operation on HTTP port 80.
 
 ## [1.5.1] - 2018-07-03
 
