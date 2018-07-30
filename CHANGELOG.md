@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5.2] - 2018-07-30
+
+### Changes
+
+- Write ephemeral proof state to RocksDB (formerly Redis). This provides a significant increase in sustained inbound hash rate while consuming disk space instead of RAM. The ephemeral data written to RocksDB is auto-pruned after 24 hours. The Redis database will be removed from the Node in a future release.
+- Upgrade to PostgreSQL 9.6.9
+- Upgrade to Redis 4.0.10
+- Upgrade Node.js (`node:8.9.0-alpine` -> `node:8.11.3-stretch`) Docker container base
+- Reduce HTTP calls to `PUT /nodes` if request body matches previous successful `PUT`.
+- Certain caching functions, which contain small amounts of volatile data, now store their data in RAM instead of Redis.
+
+### Added
+
+- Improved handling of processing time hints from Chainpoint Core.
+- Auto-migrate old Redis proof state and other Redis data to RocksDB on initial startup.
+
+### Fixed
+
+- Node UI React application internal re-factoring and bugfixes.
+- Ensure `validator.isIP()` receives a string avoiding rare crash in `1.5.1` release.
+- Re-create `/keys/backups` directories if previously deleted.
+- Improve detection, handling, and UI messaging in Brave browser when third-party cookies and local storage are disabled.
+- Trim whitespace from the list of hashes provided to `POST /hashes` using the `hashids` request header.
+
 ## [1.5.1] - 2018-07-03
 
 ### Changes
