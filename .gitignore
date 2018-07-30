@@ -1,3 +1,5 @@
 .env
-.data/
+.data/postgresql
+.data/redis
+.data/rocksdb
 .vscode

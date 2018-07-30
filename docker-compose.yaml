@@ -7,7 +7,7 @@ networks:
 services:
 
   postgres:
-    image: postgres:9.6.5-alpine
+    image: postgres:9.6.9-alpine
     container_name: postgres-node
     restart: always
     networks:
@@ -21,7 +21,7 @@ services:
       org.chainpoint.service: "postgres"
 
   redis:
-    image: redis:4.0.9-alpine
+    image: redis:4.0.10-alpine
     container_name: redis-node
     restart: always
     networks:
@@ -36,12 +36,13 @@ services:
       org.chainpoint.service: "redis"
 
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:95fde8312dae659fee71632b3f8e2327ede14019
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:bfc2007e20e3fa3217fc5e631ad75862a9e3add2
     container_name: chainpoint-node
     restart: on-failure
     volumes:
       - ./ip-blacklist.txt:/home/node/app/ip-blacklist.txt:ro
       - ./keys:/home/node/app/keys
+      - ./.data/rocksdb:/home/node/app/rocksdb
     ports:
       - "80:8080"
     networks:

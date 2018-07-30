@@ -32,8 +32,9 @@ Nodes allow clients to retrieve proofs for hashes that were previously submitted
 
 Nodes maintain a public mirror of the Calendar. This allows *any* Node to verify *any* proof.
 
-Nodes expose a public HTTP API, documented with Swagger, that you can explore:
-[https://app.swaggerhub.com/apis/chainpoint/node/1.0.0](https://app.swaggerhub.com/apis/chainpoint/node/1.0.0)
+Nodes expose a public HTTP API. There is some additional documentation, and examples of using the Node's public HTTP API with `curl` or other clients that can be found on the Wiki:
+
+[Node HTTP API](https://github.com/chainpoint/chainpoint-node/wiki/Node-HTTP-API)
 
 ## About the Technology
 
@@ -51,19 +52,18 @@ software.
 
 ### Software Components
 
-When started, `docker-compose` will install and run three system components in the Docker virtual machine.
+When started, `docker-compose` will install and run several system components in the Docker virtual machine.
 
+* Chainpoint Node (a Node.js API server + RocksDB)
 * PostgreSQL DB
-* Redis DB
-* Chainpoint Node (a Node.js API server)
-* NTP Time server (if not already running)
+* NTP Time server (only if NTP is not already running natively)
 
 These applications are started as a group and should not interfere with any other software systems running on your server. We do recommend running a Node on a server dedicated to that task.
 
 Each Node instance you want to run will need to be configured with:
 
 * A dedicated Ethereum address
-* Public IP address
+* Public IP address (ports `22` and `80` open)
 * Minimum TNT balance
 
 ### System Requirements
@@ -72,14 +72,14 @@ The software should be able to be run on any system that supports the Docker and
 
 #### Hardware
 
-The optimal hardware requirements for running a Node are relatively low.
+The optimal hardware requirements for running a Node are relatively modest.
 
 Pro (High Volume):
 
 - `>= 8GB RAM`
 - `4 CPU Core`
 - `>= 2GB swapfile`
-- `64GB SSD`
+- `64GB+ SSD`
 - `Public IPv4 address`
 
 Recommended (Avoids most RAM issues):
@@ -87,7 +87,7 @@ Recommended (Avoids most RAM issues):
 - `>= 2GB RAM`
 - `2 CPU Core`
 - `>= 2GB swapfile`
-- `20GB Hard Disk or SSD`
+- `40GB+ SSD`
 - `Public IPv4 address`
 
 Bare Minimum (May encounter RAM issues, depending on host setup):
@@ -95,12 +95,16 @@ Bare Minimum (May encounter RAM issues, depending on host setup):
 - `1GB RAM`
 - `1 CPU Core`
 - `>= 2GB swapfile`
-- `10GB Hard Disk or SSD`
+- `25GB+ SSD`
 - `Public IPv4 address`
 
 Running a Node on a server with 1GB of RAM has been [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node).
 
-If you are expecting larger volumes of hashes to be sent to your server its recommended that you scale-up the system resources by adding more RAM and CPU cores. Alternatively, you can scale-out horizontally by running more Nodes. The disk storage and CPU needs of a Node are relatively small, RAM is the first suggested upgrade.
+Nodes have relatively modest requirements for RAM and CPU. Nodes that receive sustained high volumes of hashes will write some temporary "proof state" data to SSD (approximately 350MB per million hashes). It is recommended to provision a minimum of 25GB of SSD storage. This temporary data will be automatically pruned over time.
+
+RocksDB, used internally for data storage, is optimized for SSD disks. It is recommended to use SSD disks instead of traditional hard disks whenever possible.
+
+If large volumes of hashes are sent to your server it's recommended that you scale-up the system by adding more RAM and SSD disk storage. Alternatively, you can scale-out horizontally by running more Nodes.
 
 It is not supported to run multiple instances of the Node software on a single physical host.
 
@@ -115,11 +119,10 @@ It will likely run on other operating systems that support Docker and Docker Com
 
 #### Docker & Docker Compose
 
-Nodes have been developed and tested to run on the following
-software versions.
+Nodes have been developed and tested on the following software versions.
 
-* `Docker version 17.06.2-ce, build cec0b72`
-* `docker-compose version 1.21.0`
+* `Docker version 18.05.0-ce, build f150324`
+* `docker-compose version 1.21.2, build a133471`
 
 ## Installation
 
@@ -146,6 +149,8 @@ to your account on that server. This is beyond the scope of this document. You w
 
 * `root` access, or a user with `sudo` priveleges
 * Ubuntu 16.04 LTS OS
+
+You should always choose the simplest Ubuntu 16.04 image provided by your hosting provider. "Desktop" versions, or those that run an enabled version of the `ufw` firewall by default are not recommended as there are known compatibility issues with Docker and system firewalls. 
 
 Log in to your server via SSH and continue to the next step, installing Docker and `docker-compose`.
 
