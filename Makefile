@@ -149,7 +149,7 @@ sign-chainpoint-security-txt:
 ## ntpd-start                : Start docker ntpd
 .PHONY : ntpd-start
 ntpd-start:
-	@status=$$(ps -ef | grep -v -E '(grep|ntpd-start)' | grep ntpd | wc -l); \
+	@status=$$(ps -ef | grep -v -E '(grep|ntpd-start)' | grep -E '(ntpd|timesyncd)' | wc -l); \
 	if test $${status} -ge 1; then \
 		echo "Local NTPD seems to be running. Skipping chainpoint-ntpd..."; \
 	else \
