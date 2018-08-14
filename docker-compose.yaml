@@ -26,12 +26,6 @@ services:
     restart: always
     networks:
       - chainpoint-node
-    volumes:
-      - ./.redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
-      - ./.data/redis:/data
-    command:
-      - redis-server
-      - /usr/local/etc/redis/redis.conf
     labels:
       org.chainpoint.service: "redis"
 
@@ -48,7 +42,6 @@ services:
     networks:
       - chainpoint-node
     depends_on:
-      - redis
       - postgres
     environment:
       NODE_TNT_ADDRESS: ${NODE_TNT_ADDRESS}
