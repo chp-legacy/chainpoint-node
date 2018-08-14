@@ -18,7 +18,7 @@ help : Makefile
 
 ## up                        : Start Node
 .PHONY : up
-up: guard-ubuntu clear-containers ntpd-start build-rocksdb
+up: guard-ubuntu ntpd-start build-rocksdb
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d
 
 ## down                      : Shutdown Node
