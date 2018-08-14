@@ -96,11 +96,10 @@ upgrade-docker-compose:
 	curl -sSL https://chainpoint-node.storage.googleapis.com/docker-compose-install.sh | bash
 
 # DEPRECATED : Will still work for now, remove after 10/1/2018.
-## backup-auth-keys          : Backup HMAC Auth keys to the 'keys/backups' dir
+## backup-auth-keys          : Backup HMAC Auth keys (DEPRECATED)
 .PHONY : backup-auth-keys
-backup-auth-keys: up
-	@echo -n "WARNING : 'make backup-auth-keys' is deprecated as backups are automated now. Please use 'make print-auth-keys' instead. Cannot be run while Node is already running."
-	@docker exec -it chainpoint-node node auth-keys-backup.js
+backup-auth-keys:
+	@echo -n "DEPRECATED : Backups are performed automatically now. Please use 'make print-auth-keys' to view or copy to another system."
 
 ## print-auth-keys           : Print to console the filename and contents of auth key (HMAC) backups
 .PHONY : print-auth-keys
