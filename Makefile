@@ -149,11 +149,11 @@ sign-chainpoint-security-txt:
 ## ntpd-start                : Start docker ntpd
 .PHONY : ntpd-start
 ntpd-start:
-	@status=$$(ps -ef | grep -v -E '(grep|ntpd-start)' | grep -E '(ntpd|timesyncd)' | wc -l); \
+	@status=$$(ps -ef | grep -v -E '(grep|ntpd-start)' | grep -E '(ntpd|timesyncd|timed|pacemaker)' | wc -l); \
 	if test $${status} -ge 1; then \
-		echo "Local ntpd or timesyncd seems to be running. Skipping chainpoint-ntpd..."; \
+		echo "Local time sync daemon seems to be running. Skipping chainpoint-ntpd..."; \
 	else \
-		echo Local ntpd or timesyncd is not running. Starting chainpoint-ntpd...; \
+		echo "Local time sync daemon does not appear to be running. Starting chainpoint-ntpd.."; \
 		export COMPOSE_IGNORE_ORPHANS=true; docker-compose -f docker-compose-ntpd.yaml up -d; \
 	fi
 
