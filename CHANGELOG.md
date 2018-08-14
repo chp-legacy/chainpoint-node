@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - UNRELEASED
+
+### Changes
+
+- Migrate all PostgreSQL data to RocksDB, remove data from PostgreSQL. Redis and PostgreSQL containers will be removed in a future release.
+- No longer start `chainpoint-ntpd` if `timesyncd` or `ntpd` is detected on Linux, or `timed`, or `pacemaker` on macOS.
+- Perform backups of Auth (HMAC) keys to `keys/backups` directory automatically on Node registration or restart. Removed `make backup-auth-keys` target.
+- Removed Redis and PostgreSQL related `make` targets.
+
+### Added
+
+- Send a `User-Agent` string with upstream requests.
+
+### Fixed
+
+- Updated NPM dependencies.
+
+
 ## [1.5.2] - 2018-07-30
 
 ### Changes
