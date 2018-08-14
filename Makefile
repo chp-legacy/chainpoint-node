@@ -45,16 +45,6 @@ logs:
 logs-ntpd:
 	@docker-compose -f docker-compose-ntpd.yaml logs -f -t | awk '/chainpoint-ntpd/'
 
-## logs-redis                : Tail Redis logs
-.PHONY : logs-redis
-logs-redis:
-	@docker-compose logs -f -t | awk '/redis/'
-
-## logs-postgres             : Tail PostgreSQL logs
-.PHONY : logs-postgres
-logs-postgres:
-	@docker-compose logs -f -t | awk '/postgres/'
-
 ## logs-all                  : Tail all logs
 .PHONY : logs-all
 logs-all:
@@ -105,42 +95,17 @@ upgrade-docker-compose:
 	@sudo mkdir -p /usr/local/bin; \
 	curl -sSL https://chainpoint-node.storage.googleapis.com/docker-compose-install.sh | bash
 
-## postgres                  : Connect to the local PostgreSQL with `psql`
-.PHONY : postgres
-postgres:
-	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres
-	@sleep 6
-	@docker exec -it postgres-node psql -U chainpoint
-
-## redis                     : Connect to the local Redis with `redis-cli`
-.PHONY : redis
-redis:
-	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d redis
-	@sleep 2
-	@docker exec -it redis-node redis-cli
-
-# DEPRECATED : Will still work for now, remove after 7/1/2018.
-.PHONY : auth-keys
-auth-keys: backup-auth-keys
-	@echo -n "WARNING : 'make auth-keys' is deprecated. Please use 'make backup-auth-keys' instead."
-
+# DEPRECATED : Will still work for now, remove after 10/1/2018.
 ## backup-auth-keys          : Backup HMAC Auth keys to the 'keys/backups' dir
 .PHONY : backup-auth-keys
 backup-auth-keys: up
+	@echo -n "WARNING : 'make backup-auth-keys' is deprecated as backups are automated now. Please use 'make print-auth-keys' instead. Cannot be run while Node is already running."
 	@docker exec -it chainpoint-node node auth-keys-backup.js
 
 ## print-auth-keys           : Print to console the filename and contents of auth key (HMAC) backups
 .PHONY : print-auth-keys
 print-auth-keys: up
 	@docker exec -it chainpoint-node node auth-keys-print.js
-
-## calendar-delete           : Delete all calendar data for this Node
-.PHONY : calendar-delete
-calendar-delete:
-	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d postgres
-	@sleep 6
-	@docker exec -it postgres-node psql -U chainpoint -c "DELETE FROM calendar"
-	make restart
 
 .PHONY : sign-chainpoint-security-txt
 sign-chainpoint-security-txt:
