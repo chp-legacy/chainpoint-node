@@ -26,14 +26,10 @@ up: guard-ubuntu ntpd-start build-rocksdb
 down: ntpd-stop
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose down
 
-## restart                   : Restart only chainpoint-node service
+## restart                   : Restart Node
 .PHONY : restart
 restart:
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose restart chainpoint-node
-
-## restart-all               : Restart all services
-.PHONY : restart-all
-restart-all: down up
 
 ## logs                      : Tail Node logs
 .PHONY : logs
@@ -44,11 +40,6 @@ logs:
 .PHONY : logs-ntpd
 logs-ntpd:
 	@docker-compose -f docker-compose-ntpd.yaml logs -f -t | awk '/chainpoint-ntpd/'
-
-## logs-all                  : Tail all logs
-.PHONY : logs-all
-logs-all:
-	@docker-compose logs -f -t
 
 ## ps                        : View running processes
 .PHONY : ps
@@ -67,7 +58,7 @@ build-config:
 git-fetch:
 	git fetch && git checkout master && git pull
 
-## upgrade                   : Stop all, git pull, upgrade docker-compose, and start all
+## upgrade                   : Stop Node, git pull, upgrade docker-compose, and start Node
 .PHONY : upgrade
 upgrade: down git-fetch clear-containers guard-ubuntu upgrade-docker-compose up
 
@@ -79,7 +70,7 @@ guard-ubuntu:
 		echo "*********************************************************"; \
 	fi
 
-## clear-containers          : Stop and remove any running Chainpoint Docker containers
+# clear-containers          : Stop and remove any running Chainpoint Docker containers
 .PHONY : clear-containers
 clear-containers:
 	@-containers=$$(docker ps -aq -f "label=org.chainpoint.service"); \
