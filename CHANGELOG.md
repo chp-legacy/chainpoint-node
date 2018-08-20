@@ -5,14 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.5.3] - UNRELEASED
+## [1.5.3] - 2018-08-20
 
 ### Changes
 
-- Migrate all PostgreSQL data to RocksDB, remove data from PostgreSQL. Redis and PostgreSQL containers will be removed in a future release.
-- No longer start `chainpoint-ntpd` if `timesyncd` or `ntpd` is detected on Linux, or `timed`, or `pacemaker` on macOS.
-- Perform backups of Auth (HMAC) keys to `keys/backups` directory automatically on Node registration or restart. Removed `make backup-auth-keys` target.
-- Removed Redis and PostgreSQL related `make` targets.
+- Migrate and remove all PostgreSQL data to RocksDB. Redis and PostgreSQL containers will be removed in a future release.
+- No longer start `chainpoint-ntpd` if `timesyncd` or `ntpd` is detected on Linux, or `timed`, or `pacemaker` on macOS. Previously only `ntpd` was tested for.
+- Perform automatic backups of Auth (HMAC) keys to `keys/backups` directory on Node registration or restart.
+- Deprecated `make backup-auth-keys` target as backups are now automatic.
+- Added `echo` command to `make print-auth-keys` output. This provides easier to use one-line command to restore a backup key to the `keys` dir. Run this `echo` command to place a `.key` file in the keys directory with proper Auth Key (HMAC) content.
+- Removed Redis and PostgreSQL related `make` targets as they are no longer needed.
 
 ### Added
 
