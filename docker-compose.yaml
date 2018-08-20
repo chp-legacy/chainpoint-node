@@ -26,17 +26,11 @@ services:
     restart: always
     networks:
       - chainpoint-node
-    volumes:
-      - ./.redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
-      - ./.data/redis:/data
-    command:
-      - redis-server
-      - /usr/local/etc/redis/redis.conf
     labels:
       org.chainpoint.service: "redis"
 
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:bfc2007e20e3fa3217fc5e631ad75862a9e3add2
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:990b06c025add21cc6b48d28090fe9249c08fd4f
     container_name: chainpoint-node
     restart: on-failure
     volumes:
@@ -48,7 +42,6 @@ services:
     networks:
       - chainpoint-node
     depends_on:
-      - redis
       - postgres
     environment:
       NODE_TNT_ADDRESS: ${NODE_TNT_ADDRESS}
