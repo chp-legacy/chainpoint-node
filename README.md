@@ -305,12 +305,11 @@ verify that everything is stopped with `make ps`.
 
 ### Node Authentication Key Backup/Restore
 
-*tl;dr* : Backup your auth keys using `make backup-auth-keys` and store those backups elsewhere!!!
+*tl;dr* : On-server backups are now performed automatically (`v1.5.3+`). Export your auth keys with `make print-auth-keys` and store those backups elsewhere!!!
 
-As an alternative, you can run `make print-auth-keys` to perform the backup and also print the `HMAC` keys to the console `STDOUT`.
+This command will print the `HMAC` keys to the console `STDOUT` and also give you a handy one-liner `echo` command to help with restoring the auth key on another host.
 
-You are strongly encouraged to backup your authentication key(s). The following info may be useful
-if at some point in the future you need to backup/restore a Node or run it on a new host server.
+The following info may be useful if at some point in the future you need to backup/restore a Node or run it on a new host server.
 
 ### About Authentication Keys
 
@@ -332,21 +331,19 @@ To avoid loss you will want to back it up and store it somewhere safe in case of
 
 #### Backup
 
-It is easy to export your keys at any time by issuing the command `make backup-auth-keys` in
-your Node directory. This will create a backup file for every auth key in your database in
+As of v1.5.3+ Nodes will automatically perform backups when the Node registers with Core and upon each startup. This will create a backup file for every auth key in your database in
 the `keys/backups` sub-directory of your Node. The filename of the backup is composed of
 the combination of your ETH address and the current time in the form: `<ETH_ADDRESS>-<TIMESTAMP>.key`.
 The contents of the file will be a single line of text which is the HMAC Auth key associated
 with that address.
 
-The `make backup-auth-keys` command can be run without fear of overwriting existing files since
-it includes a current timestamp in the backup filename.
+The `make backup-auth-keys` is no longer needed and will be removed in the future. You are still responsible for copying these backups to a safe place though!
 
 #### Restore
 
 Restoration of a backup copy of an auth key is easy. Every time a Node starts it looks at the
 contents of the `~/chainpoint-node/keys` directory. If it finds a file where the name has one
-of the following two patterns it will read the auth key out of the file and automatically import it into your node.
+of the following two patterns it will read the auth key out of the file and automatically import it into your Node.
 
 * `<ETH_ADDRESS>.key`
 * `<ETH_ADDRESS>-<TIMESTAMP>.key`
@@ -358,7 +355,7 @@ If you manually create it, you don't need to include a timestamp in the filename
 
 __Restore Manually Created File__
 
-Create a backup file (e.g. by copying data from a spreadsheet with keys). Restart your node with `make restart` after you do this.
+Create a backup file (e.g. by copying the output of `make print-auth-keys` to a password manager). Restart your node with `make restart` after you do this to import the new auth key. The `make print-auth-keys` command will now also print an echo statement that can be used like this to help restore a key:
 
 ```sh
 # an example of creating a key backup file manually
@@ -368,22 +365,19 @@ echo -n "my-secret-auth-hmac-key" > keys/0xMYETHADDRESS.key
 
 __Restore Previously Backed Up File__
 
-If you previously ran the `make backup-auth-keys` you'll have backup files in the `~/chainpoint-node/keys/backups` directory.
+You'll find backup files in the `~/chainpoint-node/keys/backups` directory.
 
-Copy the backup file where the filename matches the `NODE_TNT_ADDRESS` you have configured in your `.env` file from the `~/chainpoint-node/keys/backups` directory to the `~/chainpoint-node/keys` directory.
+Copy the backup file where the filename matches the `NODE_TNT_ADDRESS` you have configured in your `.env` file from the `~/chainpoint-node/keys/backups` directory to the `~/chainpoint-node/keys` directory in order to make it ready to import when the Node next restarts.
 
-Restart your node with `make restart` after you do this.
+Restart your node with `make restart` after you place a `.key` file in the `keys/` dir.
 
 __Verify A Restoration__
 
 When your Node restarts, if it found a `.key` file in the `~/chainpoint-node/keys` directory it will try to restore the auth key in that file to your local database. If it succeeds you will see a line similar to the following in your `make logs` output:
 
 ```sh
-INFO : Registration : Auth key saved to PostgreSQL : 0x<MYETHADDRESS>-<TIMESTAMP>.key
+INFO : Registration : Auth key saved to local storage : 0x<MYETHADDRESS>-<TIMESTAMP>.key
 ```
-
-You can also verify that your keys were imported successfully by running `make backup-auth-keys` and inspecting the most recent files
-created in the `~/chainpoint-node/keys/backups` directory.
 
 ## Frequently Asked Questions
 
