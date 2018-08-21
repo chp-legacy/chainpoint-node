@@ -20,15 +20,6 @@ services:
     labels:
       org.chainpoint.service: "postgres"
 
-  redis:
-    image: redis:4.0.10-alpine
-    container_name: redis-node
-    restart: always
-    networks:
-      - chainpoint-node
-    labels:
-      org.chainpoint.service: "redis"
-
   chainpoint-node:
     image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:990b06c025add21cc6b48d28090fe9249c08fd4f
     container_name: chainpoint-node
