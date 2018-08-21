@@ -18,7 +18,7 @@ help : Makefile
 
 ## up                        : Start Node
 .PHONY : up
-up: guard-ubuntu ntpd-start build-rocksdb
+up: guard-ubuntu ntpd-start build-rocksdb fix-keys-dir-perms
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d
 
 ## down                      : Shutdown Node
@@ -53,6 +53,11 @@ build-config:
 	cp .env.sample .env && \
 	echo 'Copied config .env.sample to .env' || true
 
+## fix-keys-dir-perms        : Fix key dir permissions to allow Docker container to backup
+.PHONY : fix-keys-dir-perms
+fix-keys-dir-perms:
+	@sudo chown -R root keys && sudo chmod 777 keys && sudo chmod 777 keys/backups
+
 ## git-fetch                 : Git fetch latest
 .PHONY : git-fetch
 git-fetch:
@@ -60,7 +65,7 @@ git-fetch:
 
 ## upgrade                   : Stop Node, git pull, upgrade docker-compose, and start Node
 .PHONY : upgrade
-upgrade: down git-fetch clear-containers guard-ubuntu upgrade-docker-compose up
+upgrade: down git-fetch fix-keys-dir-perms clear-containers guard-ubuntu upgrade-docker-compose up
 
 guard-ubuntu:
 	@os=$$(lsb_release -si); \
