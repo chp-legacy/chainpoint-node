@@ -4,6 +4,13 @@ all: help
 # without this 'source' won't work.
 SHELL := /bin/bash
 
+# Include the `.env` file with variables defined.
+# This allows using variables defined in that file
+# with the form e.g `echo $(NODE_TNT_ADDRESS)`
+# See : https://unix.stackexchange.com/questions/235223/makefile-include-env-file
+include .env
+export $(shell sed 's/=.*//' .env)
+
 # Get the location of this makefile.
 ROOT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
@@ -18,7 +25,7 @@ help : Makefile
 
 ## up                        : Start Node
 .PHONY : up
-up: guard-ubuntu ntpd-start build-rocksdb fix-keys-dir-perms
+up: guard-ubuntu ntpd-start tls-generate-cert build-rocksdb fix-keys-dir-perms
 	@export COMPOSE_IGNORE_ORPHANS=true; docker-compose up -d
 
 ## down                      : Shutdown Node
@@ -45,6 +52,24 @@ logs-ntpd:
 .PHONY : ps
 ps:
 	@docker-compose ps
+
+ip:
+	@echo $(CHAINPOINT_NODE_PUBLIC_URI)
+	@echo $(CHAINPOINT_NODE_PUBLIC_URI) | \
+	awk -F[/:] '{print $$4}'
+
+## tls-generate-cert         : Create new self-signed TLS certificate
+.PHONY : tls-generate-cert
+tls-generate-cert:
+	@[ ! -f ./cert.key ] && \
+	./certgen.sh 127.0.0.1 && \
+	echo 'TLS certificate generated' || true
+
+## tls-regenerate-cert       : Recreate new self-signed TLS certificate (replaces existing)
+.PHONY : tls-regenerate-cert
+tls-regenerate-cert:
+	@./certgen.sh 127.0.0.1 && \
+	echo 'TLS certificate regenerated' || true
 
 ## build-config              : Create new `.env` config file from `.env.sample`
 .PHONY : build-config

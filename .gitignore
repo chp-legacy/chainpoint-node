@@ -3,3 +3,7 @@
 .data/redis
 .data/rocksdb
 .vscode
+certgen.cnf
+cert.key
+cert.info
+cert.crt
