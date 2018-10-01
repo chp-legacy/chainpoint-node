@@ -7,7 +7,7 @@ networks:
 services:
 
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:e980c7903a55a0614719873c6641235dfa9431ef
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:3f34a7689cf7cfdc956e926437181f75f2ecd80a
     container_name: chainpoint-node
     restart: on-failure
     volumes:
@@ -26,6 +26,8 @@ services:
       CHAINPOINT_NODE_PUBLIC_URI: "${CHAINPOINT_NODE_PUBLIC_URI:-http://0.0.0.0}"
       CHAINPOINT_CORE_API_BASE_URI: "${CHAINPOINT_CORE_API_BASE_URI:-http://0.0.0.0}"
       CHAINPOINT_NODE_UI_PASSWORD: "${CHAINPOINT_NODE_UI_PASSWORD:-empty}"
+      CHAINPOINT_NODE_PRIVATE_URI: "${CHAINPOINT_NODE_PRIVATE_URI:-empty}"
+      CHAINPOINT_NODE_REFLECTED_URI: "${CHAINPOINT_NODE_REFLECTED_URI:-empty}"
       #DEBUG: "sequelize*"
     labels:
       org.chainpoint.service: "chainpoint-node"
