@@ -138,7 +138,7 @@ Before you start, you will need:
 
 * An Ethereum address that you have the private keys for. Exchange provided accounts are generally not supported. You should be able to unlock your account to send Ether or TNT using MyEtherWallet for example.
 
-* You must have the mimimum balance of 5000 TNT to run a Node, and those TNT must be assigned to the Ethereum address you'll use to identify your Node. You can check your TNT balance (in Grains, divide by `100000000` (10^8) for TNT balance) using the Etherscan.io [contract reading tool for our ERC20 smart contract](https://etherscan.io/address/0x08f5a9235b08173b7569f83645d2c7fb55e8ccd8#readContract) (input your address in the `balanceOf` field and click `Query`).
+* You must have the minimum balance of 5000 TNT to run a Node, and those TNT must be assigned to the Ethereum address you'll use to identify your Node. You can check your TNT balance (in Grains, divide by `100000000` (10^8) for TNT balance) using the Etherscan.io [contract reading tool for our ERC20 smart contract](https://etherscan.io/address/0x08f5a9235b08173b7569f83645d2c7fb55e8ccd8#readContract) (input your address in the `balanceOf` field and click `Query`).
 
 If you run into any issues operating your Node, the first best place to look for help is the [Frequently Asked Questions](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions) page on our Wiki.
 
@@ -147,7 +147,7 @@ If you run into any issues operating your Node, the first best place to look for
 Your first step is to start a server and gain SSH access
 to your account on that server. This is beyond the scope of this document. You will need:
 
-* `root` access, or a user with `sudo` priveleges
+* `root` access, or a user with `sudo` privileges
 * Ubuntu 16.04 LTS OS
 
 You should always choose the simplest Ubuntu 16.04 image provided by your hosting provider. "Desktop" versions, or those that run an enabled version of the `ufw` firewall by default are not recommended as there are known compatibility issues with Docker and system firewalls. 
@@ -162,7 +162,7 @@ To make this process easy we have created a small script, designed to be run on 
 curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
 ```
 
-Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/setup.sh) before you run it.
+Since this command runs a shell script as a privileged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/setup.sh) before you run it.
 
 Simply copy/paste the command into your terminal, logged in as the root user, or another that has sudo privileges, and it will:
 
@@ -193,7 +193,7 @@ For Chainpoint Nodes we recommend using the public NTP time servers provided by 
 * [Google Public NTP](https://developers.google.com/time/)
 * [How to Configure NTP for Use in the NTP Pool Project on Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-configure-ntp-for-use-in-the-ntp-pool-project-on-ubuntu-16-04)
 
-If your system is not running its own NTP daemon (many do so by default), a priviledged Docker container will attempt to start and continuously sync time for the Node.
+If your system is not running its own NTP daemon (many do so by default), a privileged Docker container will attempt to start and continuously sync time for the Node.
 
 ### Configure Your Node
 
