@@ -1,7 +1,5 @@
 # Chainpoint Node
 
-[![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Frequently Asked Questions
@@ -10,10 +8,9 @@ Need help? Looking for the [FAQ](https://github.com/chainpoint/chainpoint-node/w
 
 ## About
 
-Chainpoint Nodes allows anyone to run a server that accepts hashes, anchors them to public
-blockchains, create and verify proofs, and participate in the Chainpoint Network.
+A Chainpoint Node allows anyone to run a server that accepts hashes, anchors them to public blockchains, creates and verifies proofs, and participates in the Chainpoint Network.
 
-Nodes communicate with the Chainpoint Core, spending TNT to anchor hashes, and gain eligibility to earn TNT by providing services to the Chainpoint Network.
+Nodes communicate with Chainpoint Core, and gain eligibility to earn TNT by providing services to the Chainpoint Network.
 
 To be eligible to earn TNT a Node must:
 
@@ -26,7 +23,7 @@ __*Chainpoint Nodes that don't meet all these requirements consistently won't be
 
 ### What does a Node do?
 
-Chainpoint Nodes aggregate incoming hashes into a Merkle tree every second. The Merkle root is submitted to Chainpoint Core for anchoring to public blockchains.
+Chainpoint Nodes aggregate incoming hashes into a Merkle tree every five seconds. The Merkle root is submitted to Chainpoint Core for anchoring to public blockchains.
 
 Nodes allow clients to retrieve proofs for hashes that were previously submitted.
 
@@ -43,7 +40,7 @@ Nodes expose a public HTTP API. There is some additional documentation, and exam
 Chainpoint Node is run as a `docker-compose` application. `docker-compose` is a tool for running multiple Docker containers as
 an orchestrated application suite.
 
-`docker-compose` allows distribution of binary images that can run
+Docker and `docker-compose` allow distribution of binary images that can run
 anywhere that Docker can run. This ensures that everyone, regardless of
 platform, is running the same code.
 
@@ -52,10 +49,9 @@ software.
 
 ### Software Components
 
-When started, `docker-compose` will install and run several system components in the Docker virtual machine.
+When started, `docker-compose` will install and run some system components in the Docker virtual machine.
 
 * Chainpoint Node (a Node.js API server + RocksDB)
-* PostgreSQL DB
 * NTP Time server (only if NTP is not already running natively)
 
 These applications are started as a group and should not interfere with any other software systems running on your server. We do recommend running a Node on a server dedicated to that task.
@@ -68,7 +64,7 @@ Each Node instance you want to run will need to be configured with:
 
 ### System Requirements
 
-The software should be able to be run on any system that supports the Docker and Docker Compose container management tools and meets the minimal hardware requirements.
+The software should be able to be run on any system that supports Docker and Docker Compose tools and meets the minimal hardware requirements.
 
 #### Hardware
 
@@ -76,29 +72,29 @@ The optimal hardware requirements for running a Node are relatively modest.
 
 Pro (High Volume):
 
-- `>= 8GB RAM`
-- `4 CPU Core`
+- `>= 4GB RAM`
+- `>= 2 CPU Core`
+- `>= 2GB swapfile`
+- `128GB+ SSD`
+- `Public IPv4 address`
+
+Recommended:
+
+- `>= 2GB RAM`
+- `>= 2 CPU Core`
 - `>= 2GB swapfile`
 - `64GB+ SSD`
 - `Public IPv4 address`
 
-Recommended (Avoids most RAM issues):
+Minimum:
 
-- `>= 2GB RAM`
-- `2 CPU Core`
-- `>= 2GB swapfile`
-- `40GB+ SSD`
-- `Public IPv4 address`
-
-Bare Minimum (May encounter RAM issues, depending on host setup):
-
-- `1GB RAM`
-- `1 CPU Core`
+- `>= 1GB RAM`
+- `>= 1 CPU Core`
 - `>= 2GB swapfile`
 - `25GB+ SSD`
 - `Public IPv4 address`
 
-Running a Node on a server with 1GB of RAM has been [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node).
+Running a Node on a server with less than 1GB of RAM is [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node).
 
 Nodes have relatively modest requirements for RAM and CPU. Nodes that receive sustained high volumes of hashes will write some temporary "proof state" data to SSD (approximately 350MB per million hashes). It is recommended to provision a minimum of 25GB of SSD storage. This temporary data will be automatically pruned over time.
 
@@ -236,6 +232,8 @@ does not implement a block by default policy you are encouraged to either choose
 or configure a firewall on your Node server to block access to all ports with the
 exception of port `80 (HTTP)` and port `22 (SSH)`.
 
+It is discouraged to run local firewall software, such as `ufw`, on your Node server unless you are an *expert* user and understand how Docker interacts with firewalls. `ufw` and other similar tools are known to interfere with Docker.
+
 ### Run Your Node
 
 Now its time to start your Node!
@@ -244,15 +242,15 @@ After finishing the configuration in the `.env` file and saving it make sure you
 
 * `make up` : start all services
 * `make down` : stop all services
-* `make upgrade` : upgrade to newest release in git, restarting *all* services
-* `make restart` : restart only the Node software. DB services and git unaffected.
+* `make upgrade` : upgrade to newest release in git and restart
+* `make restart` : restart only the Node software, git unchanged.
 * `make logs` : show, and tail, the `docker-compose` logfiles
 * `make ps` : show the status of the running processes
 
 The simplest step at this point is to run `make up`. This
 will automatically pull down the appropriate Docker images
 (which may take a few minutes the first time, when there is an upgrade available, or on slower networks) and start them. `docker-compose` will also
-try to ensure that these services keep running, even if they were to crash (which is unlikely).
+try to ensure that the Node keeps running, even if it was to crash (which is unlikely, its very stable).
 
 If you log out of your SSH session it will have no effect on your Node as long as you start it as described above.
 
@@ -279,12 +277,6 @@ When you start your Node you'll see in the logs that your Node will attempt to r
 The Node will then go through a process of downloading, and cryptographically verifying the entire Chainpoint Calendar. Every block will have its signature checked and will be stored locally. This process may take some time on first run as our Calendar grows. After initial sync, all incremental changes will also be pulled down to every Node, verified and stored.
 
 If there are any problems you see in the logs, or if something is not working as expected, please [file a bug](https://github.com/chainpoint/chainpoint-node/issues) and provide as much information about the issue as possible.
-
-### Transferring TNT for Credits
-
-Update 9/19/2017
-
-Nodes will receive enough credits to submit the maximum number of hashes to Core per day. This credit model will remain active until further notice. At this time, there is no need to convert TNT to credits.
 
 ### Sending Hashes to Your Node with the CLI
 
@@ -336,8 +328,6 @@ the `keys/backups` sub-directory of your Node. The filename of the backup is com
 the combination of your ETH address and the current time in the form: `<ETH_ADDRESS>-<TIMESTAMP>.key`.
 The contents of the file will be a single line of text which is the HMAC Auth key associated
 with that address.
-
-The `make backup-auth-keys` is no longer needed and will be removed in the future. You are still responsible for copying these backups to a safe place though!
 
 #### Restore
 
@@ -408,5 +398,3 @@ limitations under the License.
 ## Thank You!
 
 Thank you for being an active participant in the Chainpoint Network and for your interest in running a Chainpoint Node. We couldn't do it without you!
-
-
