@@ -116,12 +116,6 @@ upgrade-docker-compose:
 	@sudo mkdir -p /usr/local/bin; \
 	curl -sSL https://chainpoint-node.storage.googleapis.com/docker-compose-install.sh | bash
 
-# DEPRECATED : Will still work for now, remove after 10/1/2018.
-## backup-auth-keys          : Backup HMAC Auth keys (DEPRECATED)
-.PHONY : backup-auth-keys
-backup-auth-keys:
-	@echo -n "DEPRECATED : Backups are performed automatically now. Please use 'make print-auth-keys' to view or copy to another system."
-
 ## print-auth-keys           : Print to console the filename and contents of auth key (HMAC) backups
 .PHONY : print-auth-keys
 print-auth-keys: up
