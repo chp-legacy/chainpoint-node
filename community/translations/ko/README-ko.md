@@ -1,5 +1,5 @@
- This is a community provided translation based off of the main README.md as of Git commit <git sha1>. 
-This translation was created by <Park Kyung Min> <pkungm2@gmail.com>
+This is a community provided translation based off of the main README.md as of Git commit <git sha1>       
+This translation was created by <Park Kyung Min> <pkungm2@gmail.com>.
 # Chainpoint Node
  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
  ## 자주 묻는 질문
