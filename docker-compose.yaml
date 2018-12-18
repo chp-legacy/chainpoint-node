@@ -7,7 +7,7 @@ networks:
 services:
 
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:3f34a7689cf7cfdc956e926437181f75f2ecd80a
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:f2c07c2418f7b316a24129e87ab7ad61bbee0628
     container_name: chainpoint-node
     restart: on-failure
     volumes:
