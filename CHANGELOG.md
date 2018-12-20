@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5.4] - 2018-12-20
+
+### Changes
+
+- Upgraded Node.js base Docker image to Node.js `10.14.2` (LTS)
+- Removed deprecated `make backup-auth-keys` Makefile target. Use `make print-auth-keys` instead.
+- Removed all references to PostgreSQL, which is no longer used, from `docker-compose.yaml`.
+- Removed all references to Redis, which is no longer used, from `docker-compose.yaml`.
+
+### Added
+
+- Optional experimental TLS/HTTPS support and self-signed certificate generation. Requires port 443 open for use. Port 80 will continue to operate the same as before.
+- Retry mechanism on failure to submit an aggregated Merkle Root to Core.
+- Added `block_id` & `block_value` to the `/verify` endpoint as a convenience when verifying a proof
+- Community provided Korean translation of the `README.md` under the `community/translations/*` folder.
+
+
 ## [1.5.3] - 2018-08-20
 
 ### Changes

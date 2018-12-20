@@ -6,48 +6,28 @@ networks:
 
 services:
 
-  postgres:
-    image: postgres:9.6.9-alpine
-    container_name: postgres-node
-    restart: always
-    networks:
-      - chainpoint-node
-    volumes:
-      - ./.data/postgresql:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: chainpoint
-      POSTGRES_PASSWORD: chainpoint
-    labels:
-      org.chainpoint.service: "postgres"
-
-  redis:
-    image: redis:4.0.10-alpine
-    container_name: redis-node
-    restart: always
-    networks:
-      - chainpoint-node
-    labels:
-      org.chainpoint.service: "redis"
-
   chainpoint-node:
-    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:990b06c025add21cc6b48d28090fe9249c08fd4f
+    image: gcr.io/chainpoint-registry/github-chainpoint-chainpoint-node-src:f2c07c2418f7b316a24129e87ab7ad61bbee0628
     container_name: chainpoint-node
     restart: on-failure
     volumes:
       - ./ip-blacklist.txt:/home/node/app/ip-blacklist.txt:ro
+      - ./cert.crt:/home/node/app/cert.crt:ro
+      - ./cert.key:/home/node/app/cert.key:ro
       - ./keys:/home/node/app/keys
       - ./.data/rocksdb:/home/node/app/rocksdb
     ports:
       - "80:8080"
+      - "443:8443"
     networks:
       - chainpoint-node
-    depends_on:
-      - postgres
     environment:
       NODE_TNT_ADDRESS: ${NODE_TNT_ADDRESS}
       CHAINPOINT_NODE_PUBLIC_URI: "${CHAINPOINT_NODE_PUBLIC_URI:-http://0.0.0.0}"
       CHAINPOINT_CORE_API_BASE_URI: "${CHAINPOINT_CORE_API_BASE_URI:-http://0.0.0.0}"
       CHAINPOINT_NODE_UI_PASSWORD: "${CHAINPOINT_NODE_UI_PASSWORD:-empty}"
+      CHAINPOINT_NODE_PRIVATE_URI: "${CHAINPOINT_NODE_PRIVATE_URI:-empty}"
+      CHAINPOINT_NODE_REFLECTED_URI: "${CHAINPOINT_NODE_REFLECTED_URI:-empty}"
       #DEBUG: "sequelize*"
     labels:
       org.chainpoint.service: "chainpoint-node"
