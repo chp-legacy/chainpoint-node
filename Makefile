@@ -78,43 +78,10 @@ build-config:
 	cp .env.sample .env && \
 	echo 'Copied config .env.sample to .env' || true
 
-## fix-keys-dir-perms        : Fix key dir permissions to allow Docker container to backup
-.PHONY : fix-keys-dir-perms
-fix-keys-dir-perms:
-	@sudo chown -R root keys && sudo chmod 777 keys && sudo chmod 777 keys/backups
-
-## git-fetch                 : Git fetch latest
-.PHONY : git-fetch
-git-fetch:
-	git fetch && git checkout master && git pull
-
-## upgrade                   : Stop Node, git pull, upgrade docker-compose, and start Node
+## upgrade                   : Stop, upgrade, and start Node using upgrader script
 .PHONY : upgrade
-upgrade: down git-fetch fix-keys-dir-perms clear-containers guard-ubuntu upgrade-docker-compose up
-
-guard-ubuntu:
-	@os=$$(lsb_release -si); \
-	if [ "$${os}" != "Ubuntu" ]; then \
-		echo "*********************************************************"; \
-		echo "WARNING : Unsupported OS. Ubuntu 16.04 LTS is supported."; \
-		echo "*********************************************************"; \
-	fi
-
-# clear-containers          : Stop and remove any running Chainpoint Docker containers
-.PHONY : clear-containers
-clear-containers:
-	@-containers=$$(docker ps -aq -f "label=org.chainpoint.service"); \
-	if [ "$${containers}" != "" ]; then \
-		echo "flushing docker containers..."; \
-		docker stop $${containers}; \
-		docker rm $${containers}; \
-	fi
-
-## upgrade-docker-compose    : Upgrade local docker-compose installation
-.PHONY : upgrade-docker-compose
-upgrade-docker-compose:
-	@sudo mkdir -p /usr/local/bin; \
-	curl -sSL https://chainpoint-node.storage.googleapis.com/docker-compose-install.sh | bash
+upgrade:
+	curl -sSL https://chainpoint-node.storage.googleapis.com/upgrade.sh | bash
 
 ## print-auth-keys           : Print to console the filename and contents of auth key (HMAC) backups
 .PHONY : print-auth-keys
@@ -124,6 +91,19 @@ print-auth-keys: up
 .PHONY : sign-chainpoint-security-txt
 sign-chainpoint-security-txt:
 	gpg --armor --output chainpoint-security.txt.sig --detach-sig chainpoint-security.txt
+
+guard-ubuntu:
+	@os=$$(lsb_release -si); \
+	if [ "$${os}" != "Ubuntu" ]; then \
+		echo "*********************************************************"; \
+		echo "WARNING : Unsupported OS. Ubuntu is supported."; \
+		echo "*********************************************************"; \
+	fi
+
+## fix-keys-dir-perms        : Fix key dir permissions to allow Docker container to backup
+.PHONY : fix-keys-dir-perms
+fix-keys-dir-perms:
+	@sudo chown -R root keys && sudo chmod 777 keys && sudo chmod 777 keys/backups
 
 ## ntpd-start                : Start docker ntpd
 .PHONY : ntpd-start
@@ -146,6 +126,13 @@ ntpd-stop:
 ntpd-status:
 	@echo ''
 	@docker exec -it chainpoint-ntpd ntpctl -s all
+
+# private target. Upload the upgrader shell script to a common location.
+.PHONY : upload-upgrader
+upload-upgrader:
+	gsutil cp scripts/upgrade.sh gs://chainpoint-node/upgrade.sh
+	gsutil acl ch -u AllUsers:R gs://chainpoint-node/upgrade.sh
+	gsutil setmeta -h "Cache-Control:private, max-age=0, no-transform" gs://chainpoint-node/upgrade.sh
 
 # private target. Upload the installer shell script to a common location.
 .PHONY : upload-installer
