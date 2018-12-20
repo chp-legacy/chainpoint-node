@@ -38,7 +38,6 @@ echo '#################################################'
 echo 'Bring down existing Node and any orphans'
 echo '#################################################'
 
-export COMPOSE_IGNORE_ORPHANS=true
 docker-compose down --remove-orphans
 
 echo '#################################################'
