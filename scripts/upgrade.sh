@@ -79,6 +79,7 @@ sudo mkdir -p .data/rocksdb && sudo chown root .data/rocksdb && sudo chmod 777 .
 echo '#################################################'
 echo 'Generate new self-signed TLS cert as needed for 127.0.0.1'
 echo '#################################################'
+rm -rf cert.*
 [ ! -f ./cert.key ] && ./certgen.sh 127.0.0.1
 
 echo '#################################################'
