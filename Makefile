@@ -4,13 +4,6 @@ all: help
 # without this 'source' won't work.
 SHELL := /bin/bash
 
-# Include the `.env` file with variables defined.
-# This allows using variables defined in that file
-# with the form e.g `echo $(NODE_TNT_ADDRESS)`
-# See : https://unix.stackexchange.com/questions/235223/makefile-include-env-file
-include .env
-export $(shell sed 's/=.*//' .env)
-
 # Get the location of this makefile.
 ROOT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
@@ -52,11 +45,6 @@ logs-ntpd:
 .PHONY : ps
 ps:
 	@docker-compose ps
-
-ip:
-	@echo $(CHAINPOINT_NODE_PUBLIC_URI)
-	@echo $(CHAINPOINT_NODE_PUBLIC_URI) | \
-	awk -F[/:] '{print $$4}'
 
 ## tls-generate-cert         : Create new self-signed TLS certificate
 .PHONY : tls-generate-cert
