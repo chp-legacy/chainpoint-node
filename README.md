@@ -40,7 +40,7 @@ Nodes maintain a public mirror of the Calendar. This allows *any* Node to verify
 
 Nodes expose a public HTTP API. There is some additional documentation, and examples of using the Node's public HTTP API with `curl` or other clients that can be found on the Wiki:
 
-[Node HTTP API](https://github.com/chainpoint/chainpoint-node/wiki/Node-HTTP-API)
+[Node HTTP API](https://github.com/tnt-legacy/chainpoint-node/wiki/Node-HTTP-API)
 
 ## About the Technology
 
@@ -104,7 +104,7 @@ Bare Minimum (May encounter RAM issues, depending on host setup):
 - `25GB+ SSD`
 - `Public IPv4 address`
 
-Running a Node on a server with 1GB of RAM has been [known to cause issues](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node).
+Running a Node on a server with 1GB of RAM has been [known to cause issues](https://github.com/tnt-legacy/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node).
 
 Nodes have relatively modest requirements for RAM and CPU. Nodes that receive sustained high volumes of hashes will write some temporary "proof state" data to SSD (approximately 350MB per million hashes). It is recommended to provision a minimum of 25GB of SSD storage. This temporary data will be automatically pruned over time.
 
@@ -146,7 +146,7 @@ Before you start, you will need:
 
 * You must have the mimimum balance of 5000 TNT to run a Node, and those TNT must be assigned to the Ethereum address you'll use to identify your Node. You can check your TNT balance (in Grains, divide by `100000000` (10^8) for TNT balance) using the Etherscan.io [contract reading tool for our ERC20 smart contract](https://etherscan.io/address/0x08f5a9235b08173b7569f83645d2c7fb55e8ccd8#readContract) (input your address in the `balanceOf` field and click `Query`).
 
-If you run into any issues operating your Node, the first best place to look for help is the [Frequently Asked Questions](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions) page on our Wiki.
+If you run into any issues operating your Node, the first best place to look for help is the [Frequently Asked Questions](https://github.com/tnt-legacy/chainpoint-node/wiki/Frequently-Asked-Questions) page..
 
 ### Start a Server
 
@@ -168,7 +168,7 @@ To make this process easy we have created a small script, designed to be run on 
 curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
 ```
 
-Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/chainpoint/chainpoint-node/blob/master/scripts/setup.sh) before you run it.
+Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/tnt-legacy/chainpoint-node/blob/master/scripts/setup.sh) before you run it.
 
 Simply copy/paste the command into your terminal, logged in as the root user, or another that has sudo privileges, and it will:
 
@@ -294,7 +294,7 @@ Nodes will receive enough credits to submit the maximum number of hashes to Core
 
 ### Sending Hashes to Your Node with the CLI
 
-Now you should be fully up and running! You might want to try out your new Node with the [Chainpoint Command Line Interface (CLI)](https://github.com/chainpoint/chainpoint-cli).
+Now you should be fully up and running! You might want to try out your new Node with the [Chainpoint Command Line Interface (CLI)](https://github.com/tnt-legacy/chainpoint-cli).
 
 Normally the CLI will auto-discover a Node to send hashes to. Once you have it installed, you can configure it to always use your Node if you prefer.
 
@@ -387,7 +387,7 @@ INFO : Registration : Auth key saved to local storage : 0x<MYETHADDRESS>-<TIMEST
 
 ## Frequently Asked Questions
 
-Answers to many questions that have been raised by Node operators, and helpful tips, can be found in our [FAQ](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node)
+Answers to many questions that have been raised by Node operators, and helpful tips, can be found in our [FAQ](https://github.com/tnt-legacy/chainpoint-node/wiki/Frequently-Asked-Questions#operating-and-monitoring-a-node)
 
 Please refer to this document before filing any issues.
 
