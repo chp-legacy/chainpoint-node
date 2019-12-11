@@ -12,7 +12,7 @@ This software is deprecated and is no longer supported.
 
 ## Frequently Asked Questions
 
-Need help? Looking for the [FAQ](https://github.com/chainpoint/chainpoint-node/wiki/Frequently-Asked-Questions)?
+Need help? Looking for the [FAQ](https://github.com/tnt-legacy/chainpoint-node/wiki/Frequently-Asked-Questions)?
 
 ## About
 
