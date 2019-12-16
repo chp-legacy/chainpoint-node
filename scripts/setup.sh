@@ -72,7 +72,7 @@ echo '#################################################'
 echo 'Downloading chainpoint-node Github Repository'
 echo '#################################################'
 if [ ! -d "~/chainpoint-node" ]; then
-  cd ~ && git clone -b master https://github.com/chainpoint/chainpoint-node
+  cd ~ && git clone -b master https://github.com/tnt-legacy/chainpoint-node
 fi
 
 echo '#################################################'
