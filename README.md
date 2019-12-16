@@ -165,7 +165,7 @@ Log in to your server via SSH and continue to the next step, installing Docker a
 To make this process easy we have created a small script, designed to be run on `Ubuntu 16.04 LTS`, that will install all runtime dependencies with a simple one-line command:
 
 ```sh
-curl -sSL https://chainpoint-node.storage.googleapis.com/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/tnt-legacy/chainpoint-node/develop/scripts/setup.sh | bash
 ```
 
 Since this command runs a shell script as a priviledged user on your system we recommend you [examine it carefully](https://github.com/tnt-legacy/chainpoint-node/blob/master/scripts/setup.sh) before you run it.
