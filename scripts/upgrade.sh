@@ -62,7 +62,7 @@ echo '#################################################'
 echo 'Pull latest Node code from git master branch'
 echo '#################################################'
 
-git fetch && git checkout master && git pull
+git fetch && git checkout develop && git pull
 
 echo '#################################################'
 echo 'Fix keys dir permissions as needed'
